@@ -10,6 +10,22 @@ settings = {
 }
 
 
+swatches = [
+    "#25262b",
+    "#868e96",
+    "#fa5252",
+    "#e64980",
+    "#be4bdb",
+    "#7950f2",
+    "#4c6ef5",
+    "#228be6",
+    "#15aabf",
+    "#12b886",
+    "#40c057",
+    "#82c91e",
+    "#fab005",
+    "#fd7e14",
+]
 class SampleCard(Card):
     title = "Sample Card"
     description = "This is a sample card."
@@ -18,18 +34,36 @@ class SampleCard(Card):
     interval = 1000 * 5
 
     def render(self):
-        return html.Div(
+        return dmc.Paper(
             dmc.Title(
                 f"Now time is: {datetime.datetime.now()}",
-                c=self.settings.get("color", "grey"),
+                c=self.settings.get("text-color", "grey"),
             ),
-            style={"height": "100%", "width": "100%"},
+            style={
+                "height": "100%",
+                "width": "100%",
+                "background": self.settings.get("background-color", "grey"),
+            },
         )
 
     def render_settings(self):
-        return dmc.ColorPicker(
-            id={"type": "card-settings", "id": self.id, "sub-id": "color"},
-            value=self.settings.get("color", "grey"),
+        return dmc.Stack(
+            [
+                dmc.ColorPicker(
+                    id={"type": "card-settings", "id": self.id, "sub-id": "text-color"},
+                    value=self.settings.get("text-color", "grey"),
+                    swatches=swatches,
+                ),
+                dmc.ColorPicker(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "sub-id": "background-color",
+                    },
+                    value=self.settings.get("background-color", "grey"),
+                    swatches=swatches,
+                ),
+            ]
         )
 
 class Options(Card):
@@ -64,22 +98,6 @@ class ColorCard(Card):
     title = "Color Card"
     description = "This card just shows a coloured background"
     icon = "mdi:file-document-edit"
-    swatches = [
-        "#25262b",
-        "#868e96",
-        "#fa5252",
-        "#e64980",
-        "#be4bdb",
-        "#7950f2",
-        "#4c6ef5",
-        "#228be6",
-        "#15aabf",
-        "#12b886",
-        "#40c057",
-        "#82c91e",
-        "#fab005",
-        "#fd7e14",
-    ]
 
     def render(self):
         return dmc.Paper(
@@ -93,7 +111,7 @@ class ColorCard(Card):
                 dmc.ColorPicker(
                     id={"type": "card-settings", "id": self.id, "sub-id": "color"},
                     value=self.settings.get("color", "grey"),
-                    swatches=self.swatches,
+                    swatches=swatches,
                 ),
             ]
         )

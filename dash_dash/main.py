@@ -164,6 +164,7 @@ class DashDash:
 
         @app.callback(
             Output("main-store", "data"),
+            Output("card-layout-store", "data", allow_duplicate=True),
             Input("save-layout", "n_clicks"),
             State("card-grid", "layouts"),
             State("card-config-store", "data"),
@@ -172,7 +173,10 @@ class DashDash:
         def save_reset_cards(nclicks, card_layouts, card_config):
             if not nclicks:
                 return no_update
-            return {"card_layouts": card_layouts, "card_config": card_config}
+            return {
+                "card_layouts": card_layouts,
+                "card_config": card_config,
+            }, card_layouts
 
         @app.callback(
             Output("card-layout-store", "data", allow_duplicate=True),
