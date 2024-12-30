@@ -23,11 +23,10 @@ def get_title_layout(title: str, logo: str | None = None):
             html.Img(src=logo, height=50),
         )
     items.append(
-        dmc.Text(
-            title.upper(),
+        dmc.Title(
+            title,
+            order=2,
             c="blue",
-            fw=700,
-            style={"fontSize": "2rem"},
         )
     )
     return dmc.Group(

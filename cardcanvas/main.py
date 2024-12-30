@@ -117,9 +117,11 @@ class CardCanvas:
                             checked=False,
                             persistence=True,
                         ),
-                    ]
+                    ],
+                    pl="xs",
                 ),
             ],
+            opened=True,
         )
 
         stage_layout = dmc.Container(
