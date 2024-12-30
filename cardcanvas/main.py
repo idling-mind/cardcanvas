@@ -30,9 +30,10 @@ dmc.add_figure_templates()
 
 
 class CardCanvas:
-    def __init__(self, settings: dict[str, Any]):
+    def __init__(self, settings: dict[str, Any], dash_options: dict[str, Any] | None = None):
         self.settings = settings
         self.card_manager = CardManager()
+        self.dash_options = dash_options or {}
 
     def run(self):
         self.app.run_server(debug=True)
@@ -51,7 +52,7 @@ class CardCanvas:
         start_card_layout = start_config.get("card_layout", {})
         logo = settings.get("logo", None)
         app = Dash(
-            __name__,
+            __name__, **self.dash_options,
             external_stylesheets=[dmc.styles.NOTIFICATIONS, dmc.styles.CHARTS],
             suppress_callback_exceptions=True,
         )
