@@ -1,0 +1,395 @@
+version = 1
+requires-python = ">=3.12"
+
+[[package]]
+name = "blinker"
+version = "1.9.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/blinker/1.9/blinker-1.9.0.tar.gz", hash = "sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/blinker/1.9/blinker-1.9.0-py3-none-any.whl", hash = "sha256:ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc" },
+]
+
+[[package]]
+name = "certifi"
+version = "2024.12.14"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/certifi/2024.12.14/certifi-2024.12.14.tar.gz", hash = "sha256:b650d30f370c2b724812bee08008be0c4163b163ddaec3f2546c1caf65f191db" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/certifi/2024.12.14/certifi-2024.12.14-py3-none-any.whl", hash = "sha256:1275f7a45be9464efc1173084eaa30f866fe2e47d389406136d332ed4967ec56" },
+]
+
+[[package]]
+name = "charset-normalizer"
+version = "3.4.1"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1.tar.gz", hash = "sha256:44251f18cd68a75b56585dd00dae26183e102cd5e0f9f1466e6df5da2ed64ea3" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:73d94b58ec7fecbc7366247d3b0b10a21681004153238750bb67bd9012414545" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:dad3e487649f498dd991eeb901125411559b22e8d7ab25d3aeb1af367df5efd7" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:c30197aa96e8eed02200a83fba2657b4c3acd0f0aa4bdc9f6c1af8e8962e0757" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2369eea1ee4a7610a860d88f268eb39b95cb588acd7235e02fd5a5601773d4fa" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bc2722592d8998c870fa4e290c2eec2c1569b87fe58618e67d38b4665dfa680d" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ffc9202a29ab3920fa812879e95a9e78b2465fd10be7fcbd042899695d75e616" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:804a4d582ba6e5b747c625bf1255e6b1507465494a40a2130978bda7b932c90b" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:0f55e69f030f7163dffe9fd0752b32f070566451afe180f99dbeeb81f511ad8d" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:c4c3e6da02df6fa1410a7680bd3f63d4f710232d3139089536310d027950696a" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:5df196eb874dae23dcfb968c83d4f8fdccb333330fe1fc278ac5ceeb101003a9" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e358e64305fe12299a08e08978f51fc21fac060dcfcddd95453eabe5b93ed0e1" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-win32.whl", hash = "sha256:9b23ca7ef998bc739bf6ffc077c2116917eabcc901f88da1b9856b210ef63f35" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp312-cp312-win_amd64.whl", hash = "sha256:6ff8a4a60c227ad87030d76e99cd1698345d4491638dfa6673027c48b3cd395f" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:aabfa34badd18f1da5ec1bc2715cadc8dca465868a4e73a0173466b688f29dda" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:22e14b5d70560b8dd51ec22863f370d1e595ac3d024cb8ad7d308b4cd95f8313" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8436c508b408b82d87dc5f62496973a1805cd46727c34440b0d29d8a2f50a6c9" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2d074908e1aecee37a7635990b2c6d504cd4766c7bc9fc86d63f9c09af3fa11b" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:955f8851919303c92343d2f66165294848d57e9bba6cf6e3625485a70a038d11" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:44ecbf16649486d4aebafeaa7ec4c9fed8b88101f4dd612dcaf65d5e815f837f" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:0924e81d3d5e70f8126529951dac65c1010cdf117bb75eb02dd12339b57749dd" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:2967f74ad52c3b98de4c3b32e1a44e32975e008a9cd2a8cc8966d6a5218c5cb2" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-musllinux_1_2_ppc64le.whl", hash = "sha256:c75cb2a3e389853835e84a2d8fb2b81a10645b503eca9bcb98df6b5a43eb8886" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-musllinux_1_2_s390x.whl", hash = "sha256:09b26ae6b1abf0d27570633b2b078a2a20419c99d66fb2823173d73f188ce601" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:fa88b843d6e211393a37219e6a1c1df99d35e8fd90446f1118f4216e307e48cd" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-win32.whl", hash = "sha256:eb8178fe3dba6450a3e024e95ac49ed3400e506fd4e9e5c32d30adda88cbd407" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-cp313-cp313-win_amd64.whl", hash = "sha256:b1ac5992a838106edb89654e0aebfc24f5848ae2547d22c2c3f66454daa11971" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/charset-normalizer/3.4.1/charset_normalizer-3.4.1-py3-none-any.whl", hash = "sha256:d98b1668f06378c6dbefec3b92299716b931cd4e6061f3c875a71ced1780ab85" },
+]
+
+[[package]]
+name = "click"
+version = "8.1.8"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "colorama", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/click/8.1.8/click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/click/8.1.8/click-8.1.8-py3-none-any.whl", hash = "sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2" },
+]
+
+[[package]]
+name = "colorama"
+version = "0.4.6"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/colorama/0.4.6/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/colorama/0.4.6/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6" },
+]
+
+[[package]]
+name = "dash"
+version = "2.18.2"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "dash-core-components" },
+    { name = "dash-html-components" },
+    { name = "dash-table" },
+    { name = "flask" },
+    { name = "importlib-metadata" },
+    { name = "nest-asyncio" },
+    { name = "plotly" },
+    { name = "requests" },
+    { name = "retrying" },
+    { name = "setuptools" },
+    { name = "typing-extensions" },
+    { name = "werkzeug" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash/2.18.2/dash-2.18.2.tar.gz", hash = "sha256:20e8404f73d0fe88ce2eae33c25bbc513cbe52f30d23a401fa5f24dbb44296c8" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash/2.18.2/dash-2.18.2-py3-none-any.whl", hash = "sha256:0ce0479d1bc958e934630e2de7023b8a4558f23ce1f9f5a4b34b65eb3903a869" },
+]
+
+[[package]]
+name = "dash-core-components"
+version = "2.0.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-core-components/2/dash_core_components-2.0.0.tar.gz", hash = "sha256:c6733874af975e552f95a1398a16c2ee7df14ce43fa60bb3718a3c6e0b63ffee" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-core-components/2/dash_core_components-2.0.0-py3-none-any.whl", hash = "sha256:52b8e8cce13b18d0802ee3acbc5e888cb1248a04968f962d63d070400af2e346" },
+]
+
+[[package]]
+name = "dash-dash"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "dash" },
+    { name = "dash-iconify" },
+    { name = "dash-mantine-components" },
+    { name = "dash-snap-grid" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "dash", specifier = ">=2.18.2" },
+    { name = "dash-iconify", specifier = ">=0.1.2" },
+    { name = "dash-mantine-components", specifier = ">=0.15.1" },
+    { name = "dash-snap-grid", specifier = "==0.1.0" },
+]
+
+[[package]]
+name = "dash-html-components"
+version = "2.0.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-html-components/2/dash_html_components-2.0.0.tar.gz", hash = "sha256:8703a601080f02619a6390998e0b3da4a5daabe97a1fd7a9cebc09d015f26e50" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-html-components/2/dash_html_components-2.0.0-py3-none-any.whl", hash = "sha256:b42cc903713c9706af03b3f2548bda4be7307a7cf89b7d6eae3da872717d1b63" },
+]
+
+[[package]]
+name = "dash-iconify"
+version = "0.1.2"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-iconify/0.1.2/dash_iconify-0.1.2.tar.gz", hash = "sha256:564774be6b11b0ac3a8999b7137c3d17a1d351d69b673aa313c7228eacc9d143" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-iconify/0.1.2/dash_iconify-0.1.2-py3-none-any.whl", hash = "sha256:9ab0eda19bb4514e177bf1f8f36947bb9e5b44aba6ce947f22a1cf0f1a45fc14" },
+]
+
+[[package]]
+name = "dash-mantine-components"
+version = "0.15.1"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "dash" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-mantine-components/0.15.1/dash_mantine_components-0.15.1.tar.gz", hash = "sha256:bb24153af09ccc42972af397101ee62718ebe2bbf29fa7ed33c02997059352bd" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-mantine-components/0.15.1/dash_mantine_components-0.15.1-py3-none-any.whl", hash = "sha256:974792e1973144b56d286a50ca55bdfc5d601c174dd7cc4641a1d4bcd81e339e" },
+]
+
+[[package]]
+name = "dash-snap-grid"
+version = "0.1.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-snap-grid/0.1/dash_snap_grid-0.1.0.tar.gz", hash = "sha256:11c586fc5b96631f4bc3d6b85df2a650934fdc4b96ab235a0779c1304c684384" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-snap-grid/0.1/dash_snap_grid-0.1.0-py3-none-any.whl", hash = "sha256:c0ae198c12217d3712cfe10d3489cb587e37456a6486af15b6e9613180f3cf05" },
+]
+
+[[package]]
+name = "dash-table"
+version = "5.0.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-table/5/dash_table-5.0.0.tar.gz", hash = "sha256:18624d693d4c8ef2ddec99a6f167593437a7ea0bf153aa20f318c170c5bc7308" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/dash-table/5/dash_table-5.0.0-py3-none-any.whl", hash = "sha256:19036fa352bb1c11baf38068ec62d172f0515f73ca3276c79dee49b95ddc16c9" },
+]
+
+[[package]]
+name = "flask"
+version = "3.0.3"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "blinker" },
+    { name = "click" },
+    { name = "itsdangerous" },
+    { name = "jinja2" },
+    { name = "werkzeug" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/flask/3.0.3/flask-3.0.3.tar.gz", hash = "sha256:ceb27b0af3823ea2737928a4d99d125a06175b8512c445cbd9a9ce200ef76842" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/flask/3.0.3/flask-3.0.3-py3-none-any.whl", hash = "sha256:34e815dfaa43340d1d15a5c3a02b8476004037eb4840b34910c6e21679d288f3" },
+]
+
+[[package]]
+name = "idna"
+version = "3.10"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/idna/3.10/idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/idna/3.10/idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3" },
+]
+
+[[package]]
+name = "importlib-metadata"
+version = "8.5.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "zipp" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/importlib-metadata/8.5/importlib_metadata-8.5.0.tar.gz", hash = "sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/importlib-metadata/8.5/importlib_metadata-8.5.0-py3-none-any.whl", hash = "sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b" },
+]
+
+[[package]]
+name = "itsdangerous"
+version = "2.2.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/itsdangerous/2.2/itsdangerous-2.2.0.tar.gz", hash = "sha256:e0050c0b7da1eea53ffaf149c0cfbb5c6e2e2b69c4bef22c81fa6eb73e5f6173" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/itsdangerous/2.2/itsdangerous-2.2.0-py3-none-any.whl", hash = "sha256:c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef" },
+]
+
+[[package]]
+name = "jinja2"
+version = "3.1.5"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "markupsafe" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/jinja2/3.1.5/jinja2-3.1.5.tar.gz", hash = "sha256:8fefff8dc3034e27bb80d67c671eb8a9bc424c0ef4c0826edbff304cceff43bb" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/jinja2/3.1.5/jinja2-3.1.5-py3-none-any.whl", hash = "sha256:aba0f4dc9ed8013c424088f68a5c226f7d6097ed89b246d7749c2ec4175c6adb" },
+]
+
+[[package]]
+name = "markupsafe"
+version = "3.0.2"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/markupsafe-3.0.2.tar.gz", hash = "sha256:ee55d3edf80167e48ea11a923c7386f4669df67d7994554387f84e7d8b0a2bf0" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:9778bd8ab0a994ebf6f84c2b949e65736d5575320a17ae8984a77fab08db94cf" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:846ade7b71e3536c4e56b386c2a47adf5741d2d8b94ec9dc3e92e5e1ee1e2225" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1c99d261bd2d5f6b59325c92c73df481e05e57f19837bdca8413b9eac4bd8028" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e17c96c14e19278594aa4841ec148115f9c7615a47382ecb6b82bd8fea3ab0c8" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:88416bd1e65dcea10bc7569faacb2c20ce071dd1f87539ca2ab364bf6231393c" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:2181e67807fc2fa785d0592dc2d6206c019b9502410671cc905d132a92866557" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:52305740fe773d09cffb16f8ed0427942901f00adedac82ec8b67752f58a1b22" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:ad10d3ded218f1039f11a75f8091880239651b52e9bb592ca27de44eed242a48" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-win32.whl", hash = "sha256:0f4ca02bea9a23221c0182836703cbf8930c5e9454bacce27e767509fa286a30" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp312-cp312-win_amd64.whl", hash = "sha256:8e06879fc22a25ca47312fbe7c8264eb0b662f6db27cb2d3bbbc74b1df4b9b87" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:ba9527cdd4c926ed0760bc301f6728ef34d841f405abf9d4f959c478421e4efd" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:f8b3d067f2e40fe93e1ccdd6b2e1d16c43140e76f02fb1319a05cf2b79d99430" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:569511d3b58c8791ab4c2e1285575265991e6d8f8700c7be0e88f86cb0672094" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:15ab75ef81add55874e7ab7055e9c397312385bd9ced94920f2802310c930396" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f3818cb119498c0678015754eba762e0d61e5b52d34c8b13d770f0719f7b1d79" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:cdb82a876c47801bb54a690c5ae105a46b392ac6099881cdfb9f6e95e4014c6a" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:cabc348d87e913db6ab4aa100f01b08f481097838bdddf7c7a84b7575b7309ca" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:444dcda765c8a838eaae23112db52f1efaf750daddb2d9ca300bcae1039adc5c" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-win32.whl", hash = "sha256:bcf3e58998965654fdaff38e58584d8937aa3096ab5354d493c77d1fdd66d7a1" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313-win_amd64.whl", hash = "sha256:e6a2a455bd412959b57a172ce6328d2dd1f01cb2135efda2e4576e8a23fa3b0f" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-macosx_10_13_universal2.whl", hash = "sha256:b5a6b3ada725cea8a5e634536b1b01c30bcdcd7f9c6fff4151548d5bf6b3a36c" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-macosx_11_0_arm64.whl", hash = "sha256:a904af0a6162c73e3edcb969eeeb53a63ceeb5d8cf642fade7d39e7963a22ddb" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:4aa4e5faecf353ed117801a068ebab7b7e09ffb6e1d5e412dc852e0da018126c" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c0ef13eaeee5b615fb07c9a7dadb38eac06a0608b41570d8ade51c56539e509d" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d16a81a06776313e817c951135cf7340a3e91e8c1ff2fac444cfd75fffa04afe" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-musllinux_1_2_aarch64.whl", hash = "sha256:6381026f158fdb7c72a168278597a5e3a5222e83ea18f543112b2662a9b699c5" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-musllinux_1_2_i686.whl", hash = "sha256:3d79d162e7be8f996986c064d1c7c817f6df3a77fe3d6859f6f9e7be4b8c213a" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:131a3c7689c85f5ad20f9f6fb1b866f402c445b220c19fe4308c0b147ccd2ad9" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-win32.whl", hash = "sha256:ba8062ed2cf21c07a9e295d5b8a2a5ce678b913b45fdf68c32d95d6c1291e0b6" },
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/markupsafe/3.0.2/MarkupSafe-3.0.2-cp313-cp313t-win_amd64.whl", hash = "sha256:e444a31f8db13eb18ada366ab3cf45fd4b31e4db1236a4448f68778c1d1a5a2f" },
+]
+
+[[package]]
+name = "nest-asyncio"
+version = "1.6.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/nest-asyncio/1.6/nest_asyncio-1.6.0.tar.gz", hash = "sha256:6f172d5449aca15afd6c646851f4e31e02c598d553a667e38cafa997cfec55fe" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/nest-asyncio/1.6/nest_asyncio-1.6.0-py3-none-any.whl", hash = "sha256:87af6efd6b5e897c81050477ef65c62e2b2f35d51703cae01aff2905b1852e1c" },
+]
+
+[[package]]
+name = "packaging"
+version = "24.2"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/packaging/24.2/packaging-24.2.tar.gz", hash = "sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/packaging/24.2/packaging-24.2-py3-none-any.whl", hash = "sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759" },
+]
+
+[[package]]
+name = "plotly"
+version = "5.24.1"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "packaging" },
+    { name = "tenacity" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/plotly/5.24.1/plotly-5.24.1.tar.gz", hash = "sha256:dbc8ac8339d248a4bcc36e08a5659bacfe1b079390b8953533f4eb22169b4bae" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/plotly/5.24.1/plotly-5.24.1-py3-none-any.whl", hash = "sha256:f67073a1e637eb0dc3e46324d9d51e2fe76e9727c892dde64ddf1e1b51f29089" },
+]
+
+[[package]]
+name = "requests"
+version = "2.32.3"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "certifi" },
+    { name = "charset-normalizer" },
+    { name = "idna" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/requests/2.32.3/requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/requests/2.32.3/requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6" },
+]
+
+[[package]]
+name = "retrying"
+version = "1.3.4"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/retrying/1.3.4/retrying-1.3.4.tar.gz", hash = "sha256:345da8c5765bd982b1d1915deb9102fd3d1f7ad16bd84a9700b85f64d24e8f3e" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/retrying/1.3.4/retrying-1.3.4-py3-none-any.whl", hash = "sha256:8cc4d43cb8e1125e0ff3344e9de678fefd85db3b750b81b2240dc0183af37b35" },
+]
+
+[[package]]
+name = "setuptools"
+version = "75.6.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/setuptools/75.6/setuptools-75.6.0.tar.gz", hash = "sha256:8199222558df7c86216af4f84c30e9b34a61d8ba19366cc914424cdbd28252f6" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/setuptools/75.6/setuptools-75.6.0-py3-none-any.whl", hash = "sha256:ce74b49e8f7110f9bf04883b730f4765b774ef3ef28f722cce7c273d253aaf7d" },
+]
+
+[[package]]
+name = "six"
+version = "1.17.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/six/1.17/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/six/1.17/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274" },
+]
+
+[[package]]
+name = "tenacity"
+version = "9.0.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/tenacity/9/tenacity-9.0.0.tar.gz", hash = "sha256:807f37ca97d62aa361264d497b0e31e92b8027044942bfa756160d908320d73b" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/tenacity/9/tenacity-9.0.0-py3-none-any.whl", hash = "sha256:93de0c98785b27fcf659856aa9f54bfbd399e29969b0621bc7f762bd441b4539" },
+]
+
+[[package]]
+name = "typing-extensions"
+version = "4.12.2"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/typing-extensions/4.12.2/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/typing-extensions/4.12.2/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d" },
+]
+
+[[package]]
+name = "urllib3"
+version = "2.3.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/urllib3/2.3/urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/urllib3/2.3/urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df" },
+]
+
+[[package]]
+name = "werkzeug"
+version = "3.0.6"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+dependencies = [
+    { name = "markupsafe" },
+]
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/werkzeug/3.0.6/werkzeug-3.0.6.tar.gz", hash = "sha256:a8dd59d4de28ca70471a34cba79bed5f7ef2e036a76b3ab0835474246eb41f8d" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/werkzeug/3.0.6/werkzeug-3.0.6-py3-none-any.whl", hash = "sha256:1bc0c2310d2fbb07b1dd1105eba2f7af72f322e1e455f2f93c993bee8c8a5f17" },
+]
+
+[[package]]
+name = "zipp"
+version = "3.21.0"
+source = { registry = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/pypackages/pypi/simple/" }
+sdist = { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/zipp/3.21/zipp-3.21.0.tar.gz", hash = "sha256:2c9958f6430a2040341a52eb608ed6dd93ef4392e02ffe219417c1b28b5dd1f4" }
+wheels = [
+    { url = "https://tfsprod.gaes.aeroes.internal/DefaultCollection/_packaging/9e526b0b-a96f-4467-acd5-9d27dd953a6b/pypi/download/zipp/3.21/zipp-3.21.0-py3-none-any.whl", hash = "sha256:ac1bbe05fd2991f160ebce24ffbac5f6d11d83dc90891255885223d42b3cd931" },
+]

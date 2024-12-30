@@ -1,0 +1,12 @@
+[project]
+name = "dash-dash"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dash>=2.18.2",
+    "dash-iconify>=0.1.2",
+    "dash-mantine-components>=0.15.1",
+    "dash-snap-grid==0.1.0",
+]
