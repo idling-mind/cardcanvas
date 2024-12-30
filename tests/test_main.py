@@ -1,5 +1,5 @@
 from dash import Dash
-from dash_dash import DashDash, Card
+from cardcanvas import CardCanvas, Card
 
 
 class TestCard(Card):
@@ -12,7 +12,7 @@ def test_main():
         "title": "My Dash App",
         "start_config": {},
     }
-    dashboard = DashDash(settings)
+    dashboard = CardCanvas(settings)
     dashboard.card_manager.register_card_class(TestCard)
     assert dashboard.card_manager.card_classes == {"TestCard": TestCard}
     assert isinstance(dashboard.app, Dash)

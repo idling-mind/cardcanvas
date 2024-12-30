@@ -26,7 +26,7 @@ from .card_manager import CardManager
 _dash_renderer._set_react_version("18.2.0")
 
 
-class DashDash:
+class CardCanvas:
     def __init__(self, settings: dict[str, Any]):
         self.settings = settings
         self.card_manager = CardManager()

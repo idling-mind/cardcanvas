@@ -1,4 +1,4 @@
-from dash_dash import DashDash, Card
+from cardcanvas import CardCanvas, Card
 from dash import html
 import dash_mantine_components as dmc
 import datetime
@@ -117,9 +117,9 @@ class ColorCard(Card):
         )
 
 
-dashdash = DashDash(settings)
-dashdash.card_manager.register_card_class(SampleCard)
-dashdash.card_manager.register_card_class(ColorCard)
-dashdash.card_manager.register_card_class(Options)
+canvas = CardCanvas(settings)
+canvas.card_manager.register_card_class(SampleCard)
+canvas.card_manager.register_card_class(ColorCard)
+canvas.card_manager.register_card_class(Options)
 
-dashdash.app.run_server(debug=True)
+canvas.app.run_server(debug=True)

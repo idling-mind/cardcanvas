@@ -32,7 +32,7 @@ jobs:
           uv sync
       - name: Lint with ruff
         run: |
-          ruff check dash_dash
+          ruff check cardcanvas
       - name: Test with pytest
         run: |
           pytest tests
