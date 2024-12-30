@@ -27,7 +27,7 @@ class Card(ABC):
     description: str = "This is a sample card."
     icon = "mdi:file-document-edit"
     color: str = "#336699"
-    interval: int = 1000 * 60 * 60
+    interval: int | None = None
 
     def __init__(
         self,
@@ -106,13 +106,13 @@ class Card(ABC):
             ),
             buttons,
         ]
-        children.append(
-            dcc.Interval(
-                id={"type": "card-interval", "index": self.id},
-                interval=self.interval,  # 1000 so that it gets triggered immediately
-                # This is changed in the first render
+        if self.interval:
+            children.append(
+                dcc.Interval(
+                    id={"type": "card-interval", "index": self.id},
+                    interval=self.interval,
+                )
             )
-        )
 
         return html.Div(
             children,
