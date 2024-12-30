@@ -18,6 +18,10 @@ def get_title_layout(title: str, logo: str | None = None):
         dmc.Group: The title layout
     """
     items = []
+    if logo:
+        items.append(
+            html.Img(src=logo, height=50),
+        )
     items.append(
         dmc.Text(
             title.upper(),
@@ -26,13 +30,8 @@ def get_title_layout(title: str, logo: str | None = None):
             style={"fontSize": "2rem"},
         )
     )
-    if logo:
-        items.append(
-            html.Img(src=logo, height=50),
-        )
     return dmc.Group(
         items,
-        justify="space-between",
         p="xs",
     )
 

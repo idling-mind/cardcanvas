@@ -19,6 +19,7 @@ from dash import (
     _dash_renderer,
 )
 from dash_snap_grid import ResponsiveGrid
+from dash_iconify import DashIconify
 
 from . import utils
 from .card_manager import CardManager
@@ -44,61 +45,81 @@ class CardCanvas:
         title = settings.get("title", "Dash Dash")
         start_config = settings.get("start_config", {})
         logo = settings.get("logo", None)
-        app = Dash(__name__)
+        app = Dash(
+            __name__,
+            external_stylesheets=[dmc.styles.NOTIFICATIONS],
+            suppress_callback_exceptions=True,
+        )
         app.title = title
-        app.config.suppress_callback_exceptions = True
 
-        title_layout = utils.get_title_layout(title, logo)
-
-        main_buttons = dmc.Group(
+        title_layout = dmc.Group(
             [
-                utils.render_buttons(
-                    [
-                        {
-                            "id": "open-settings",
-                            "label": "Open Settings",
-                            "icon": "mdi:settings",
-                        },
-                        {"id": "add-cards", "label": "Add Cards", "icon": "mdi:plus"},
-                        {
-                            "id": "",
-                            "label": "Layout",
-                            "children": [
-                                {
-                                    "id": "upload-layout",
-                                    "type": "upload",
-                                    "label": "Upload Layout",
-                                    "icon": "mdi:upload",
-                                },
-                                {
-                                    "id": "download-layout",
-                                    "label": "Download Layout",
-                                    "icon": "mdi:download",
-                                },
-                                {
-                                    "id": "save-layout",
-                                    "label": "Save Layout",
-                                    "icon": "mdi:content-save",
-                                },
-                                {
-                                    "id": "reset-layout",
-                                    "label": "Restore Layout",
-                                    "icon": "mdi:refresh",
-                                },
-                            ],
-                        },
-                    ]
-                ),
-                dmc.Checkbox(
-                    "Editable Layout",
-                    id="edit-layout",
-                    size="xs",
-                    checked=False,
-                    persistence=True,
+                utils.get_title_layout(title, logo),
+                dmc.ActionIcon(
+                    id="open-main-menu",
+                    children=DashIconify(icon="mdi:menu"),
+                    variant="outline",
                 ),
             ],
-            m="xs",
-            mt=0,
+            justify="space-between",
+        )
+
+        main_buttons = dmc.Collapse(
+            id="main-menu-collapse",
+            children=[
+                dmc.Group(
+                    [
+                        utils.render_buttons(
+                            [
+                                # {
+                                #     "id": "open-settings",
+                                #     "label": "Open Settings",
+                                #     "icon": "mdi:settings",
+                                # },
+                                {
+                                    "id": "add-cards",
+                                    "label": "Add Cards",
+                                    "icon": "mdi:plus",
+                                },
+                                {
+                                    "id": "",
+                                    "label": "Layout",
+                                    "children": [
+                                        {
+                                            "id": "upload-layout",
+                                            "type": "upload",
+                                            "label": "Upload Layout",
+                                            "icon": "mdi:upload",
+                                        },
+                                        {
+                                            "id": "download-layout",
+                                            "label": "Download Layout",
+                                            "icon": "mdi:download",
+                                        },
+                                        {
+                                            "id": "save-layout",
+                                            "label": "Save Layout",
+                                            "icon": "mdi:content-save",
+                                        },
+                                        {
+                                            "id": "reset-layout",
+                                            "label": "Restore Layout",
+                                            "icon": "mdi:refresh",
+                                        },
+                                    ],
+                                },
+                            ]
+                        ),
+                        dmc.Checkbox(
+                            "Editable Layout",
+                            id="edit-layout",
+                            size="xs",
+                            checked=False,
+                            persistence=True,
+                        ),
+                    ]
+                ),
+            ],
         )
 
         stage_layout = dmc.Container(
@@ -120,12 +141,14 @@ class CardCanvas:
         )
 
         invisible_controls = html.Div(
-            [
+            children=[
                 dcc.Store(id="main-store", storage_type="local"),
                 dcc.Store(id="card-config-store", storage_type="memory"),
                 dcc.Store(id="card-layout-store", storage_type="memory"),
                 dcc.Download(id="download-layout-data"),
-            ]
+                dmc.NotificationProvider(),
+                html.Div(id="notification-container"),
+            ],
         )
 
         settings_layout = dmc.Drawer(
@@ -164,6 +187,7 @@ class CardCanvas:
         @app.callback(
             Output("main-store", "data"),
             Output("card-layout-store", "data", allow_duplicate=True),
+            Output("notification-container", "children"),
             Input("save-layout", "n_clicks"),
             State("card-grid", "layouts"),
             State("card-config-store", "data"),
@@ -171,24 +195,41 @@ class CardCanvas:
         )
         def save_reset_cards(nclicks, card_layouts, card_config):
             if not nclicks:
-                return no_update
-            return {
-                "card_layouts": card_layouts,
-                "card_config": card_config,
-            }, card_layouts
+                return no_update, no_update, no_update
+            return (
+                {
+                    "card_layouts": card_layouts,
+                    "card_config": card_config,
+                },
+                card_layouts,
+                dmc.Notification(
+                    title="Layout Saved",
+                    message="The layout has been saved",
+                    color="teal",
+                    action="show",
+                ),
+            )
 
         @app.callback(
             Output("card-layout-store", "data", allow_duplicate=True),
             Output("card-config-store", "data", allow_duplicate=True),
+            Output("notification-container", "children", allow_duplicate=True),
             Input("reset-layout", "n_clicks"),
             State("main-store", "data"),
             prevent_initial_call=True,
         )
         def reset_layouts(nclicks, main_store):
             if not nclicks or not main_store or not isinstance(main_store, dict):
-                return no_update, no_update
-            return main_store.get("card_layouts", {"lg": []}), main_store.get(
-                "card_config", start_config
+                return no_update, no_update, no_update
+            return (
+                main_store.get("card_layouts", {"lg": []}),
+                main_store.get("card_config", start_config),
+                dmc.Notification(
+                    title="Layout Reset",
+                    message="The layout has been reset to the last saved state",
+                    color="orange",
+                    action="show",
+                ),
             )
 
         @app.callback(
@@ -397,5 +438,14 @@ class CardCanvas:
             except Exception as e:
                 logging.error(e)
             return {}
+
+        @app.callback(
+            Output("main-menu-collapse", "opened"),
+            Input("open-main-menu", "n_clicks"),
+            State("main-menu-collapse", "opened"),
+            prevent_initial_call=True,
+        )
+        def open_main_menu(n_clicks, status):
+            return not status
 
         return app
