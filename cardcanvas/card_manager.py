@@ -135,6 +135,9 @@ class Card(ABC):
         Here `control-id` is the id of the control in the settings drawer.
         This control-id will be the key in the settings dictionary that is passed
         to the card's render method.
+
+        Note: The control's value property is used to update the settings dictionary.
+        Right now, no other property name is supported.
         """
         pass
 
