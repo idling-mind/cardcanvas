@@ -7,6 +7,8 @@ settings = {
     "title": "Test App",
     "start_config": {},
     "logo": "https://cdn-icons-png.freepik.com/256/1230/1230254.png",
+    "grid_compact_type": "vertical",
+    "grid_row_height": 100,
 }
 
 

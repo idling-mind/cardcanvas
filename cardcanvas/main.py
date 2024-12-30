@@ -82,9 +82,8 @@ class CardCanvas:
                                 },
                                 {
                                     "id": "reset-layout",
-                                    "label": "Reset Layout",
+                                    "label": "Restore Layout",
                                     "icon": "mdi:refresh",
-                                    "options": {"bg": "#ffcccc", "color": "darkgrey"},
                                 },
                             ],
                         },
@@ -110,8 +109,8 @@ class CardCanvas:
                 ResponsiveGrid(
                     id="card-grid",
                     cols={"lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
-                    rowHeight=50,
-                    # compactType="vertical",
+                    rowHeight=settings.get("grid_row_height", 50),
+                    compactType=settings.get("grid_compact_type", None),
                     draggableCancel=".no-drag *",
                     isDroppable=True,
                     layouts={"lg": []},
@@ -225,7 +224,8 @@ class CardCanvas:
                         dmc.Title("Add Cards", order=2),
                         dmc.Text(
                             "These are the cards you can add to the dashboard."
-                            " Drag and drop them on the grid where you want them to be",
+                            " Drag and drop them on the grid where you want them to be"
+                            " displayed. Configure them by clicking on the settings icon.",
                             variant="muted",
                         ),
                         dmc.Stack(

@@ -252,20 +252,17 @@ def render_card_preview(card_class) -> DraggableDiv:
                 dmc.Group(
                     [
                         dmc.Paper(
-                            DashIconify(
-                                icon=card_class.icon,
-                                height=50,
-                                width=50,
-                                style={"padding": "5px"},
-                            ),
-                            c="white",
-                            bg=card_class.color,
-                            p=0,
+                            dmc.ThemeIcon(
+                                size="xl",
+                                color=card_class.color,
+                                variant="filled",
+                                children=DashIconify(icon=card_class.icon, width=25,)
+                            )
                         ),
                         dmc.Stack(
                             [
-                                dmc.Text(card_class.title, fw=500, fz=20, c="#bbb"),
-                                dmc.Text(card_class.description),
+                                dmc.Text(card_class.title, fw=500, fz=20, c="#666"),
+                                dmc.Text(card_class.description, fz=14, c="#999"),
                             ],
                             gap=0,
                         ),
@@ -273,7 +270,8 @@ def render_card_preview(card_class) -> DraggableDiv:
                     wrap="nowrap",
                 ),
                 style={"cursor": "grab"},
-                bg="off-white",
+                p="sm",
+                bg="#f2f2f2",
             )
         ],
         id=card_class.__name__,
