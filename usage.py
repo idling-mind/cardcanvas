@@ -33,7 +33,7 @@ class SampleCard(Card):
     description = "This is a sample card."
     icon = "mdi:file-document-edit"
     color = "#336699"
-    interval = 1000 * 5
+    interval = 1000 * 60
 
     def render(self):
         return dmc.Paper(

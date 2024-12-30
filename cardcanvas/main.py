@@ -388,7 +388,6 @@ class CardCanvas:
                 content_type, content_string = contents.split(",")
                 decoded = base64.b64decode(content_string)
                 content = decoded.decode("utf-8")
-                print(content)
                 data = json.loads(content)
                 return (
                     data,
