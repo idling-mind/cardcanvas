@@ -1,4 +1,5 @@
 import base64
+import copy
 import json
 import logging
 from typing import Any
@@ -294,7 +295,6 @@ class CardCanvas:
             if not dropped_item:
                 return no_update, no_update
             card_id = str(uuid4())
-            card_config[card_id] = {"card_class": dropped_item["i"], "settings": {}}
             new_layout_item = {
                 "i": card_id,
                 "x": dropped_item["x"],
@@ -302,10 +302,53 @@ class CardCanvas:
                 "w": dropped_item["w"],
                 "h": dropped_item["h"],
             }
+            # dropped_item["i"] returns the id of dropped object. In this case, it is the card class.
+            card_class = dropped_item["i"]
+            card_config[card_id] = {"card_class": card_class, "settings": {}}
+            card_class_obj = self.card_manager.card_classes.get(card_class)
+            if (
+                card_class_obj
+                and hasattr(card_class_obj, "grid_settings")
+                and isinstance(card_class_obj.grid_settings, dict)
+            ):
+                new_layout_item.update(card_class_obj.grid_settings)
+                print("Updating grid settings", new_layout_item)
             if not card_layouts:
                 card_layouts = {"lg": []}
             for key in card_layouts.keys():
                 card_layouts[key].append(new_layout_item)
+            return card_config, card_layouts
+
+        @app.callback(
+            Output("card-config-store", "data", allow_duplicate=True),
+            Output("card-layout-store", "data", allow_duplicate=True),
+            Input({"type": "card-duplicate", "index": ALL}, "n_clicks"),
+            State("card-config-store", "data"),
+            State("card-layout-store", "data"),
+            State("card-grid", "layout"),
+            prevent_initial_call=True,
+        )
+        def duplicate_card(nclicks, card_config, card_layouts, card_layout):
+            if not card_config:
+                return no_update, no_update
+            if not any(nclicks) or not ctx.triggered:
+                return no_update, no_update
+            if not ctx.triggered_id or not isinstance(ctx.triggered_id, dict):
+                return no_update, no_update
+            card_id = ctx.triggered_id.get("index")
+            new_card_id = str(uuid4())
+            new_card_layout = copy.deepcopy(
+                next((item for item in card_layout if item["i"] == card_id))
+            )
+            print("Duplicating card", card_id, new_card_layout)
+            new_card = copy.deepcopy(card_config.get(card_id, None))
+            print("Duplicating card", card_id, new_card)
+            new_card["id"] = new_card_id
+            new_card_layout["i"] = new_card_id
+            card_config[new_card_id] = new_card
+            for key in card_layouts.keys():
+                card_layouts[key].append(new_card_layout)
+            print(card_layouts)
             return card_config, card_layouts
 
         @app.callback(

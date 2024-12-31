@@ -28,18 +28,20 @@ swatches = [
     "#fab005",
     "#fd7e14",
 ]
-class SampleCard(Card):
+class TimeCard(Card):
     title = "Sample Card"
     description = "This is a sample card."
     icon = "mdi:file-document-edit"
     color = "#336699"
     interval = 1000 * 60
+    grid_settings = {"w": 6, "minW": 6}
 
     def render(self):
-        return dmc.Paper(
+        return dmc.Card(
             dmc.Title(
                 f"Now time is: {datetime.datetime.now()}",
                 c=self.settings.get("text-color", "grey"),
+                order=2,
             ),
             style={
                 "height": "100%",
@@ -120,7 +122,7 @@ class ColorCard(Card):
 
 
 canvas = CardCanvas(settings)
-canvas.card_manager.register_card_class(SampleCard)
+canvas.card_manager.register_card_class(TimeCard)
 canvas.card_manager.register_card_class(ColorCard)
 canvas.card_manager.register_card_class(Options)
 

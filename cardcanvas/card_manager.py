@@ -82,11 +82,20 @@ class Card(ABC):
                                 "Settings",
                                 id={"type": "card-settings", "index": self.id},
                                 className="no-drag",
+                                leftSection=DashIconify(icon="mdi:cog-outline"),
+                            ),
+                            dmc.MenuItem(
+                                "Duplicate",
+                                id={"type": "card-duplicate", "index": self.id},
+                                className="no-drag",
+                                leftSection=DashIconify(icon="mdi:content-copy"),
                             ),
                             dmc.MenuItem(
                                 "Delete",
                                 id={"type": "card-delete", "index": self.id},
                                 className="no-drag",
+                                leftSection=DashIconify(icon="mdi:trash-can-outline"),
+                                c="red",
                             ),
                         ]
                     ),
