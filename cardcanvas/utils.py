@@ -8,25 +8,43 @@ from dash_iconify import DashIconify
 from dash_snap_grid import DraggableDiv
 
 
-def get_title_layout(title: str, logo: str | None = None):
+def get_title_layout(title: str, subtitle: str | None = None, logo: str | None = None):
     """Returns a layout for the title of the app.
 
     Args:
         title (str): The title of the app.
+        subtitle (str): The subtitle of the app.
+        logo (str): URL of the logo.
 
     Returns:
         dmc.Group: The title layout
     """
     items = []
+    title_subtitle = []
     if logo:
         items.append(
-            html.Img(src=logo, height=50),
+            html.Img(src=logo, height=70),
         )
-    items.append(
+    title_subtitle.append(
         dmc.Title(
             title,
             order=2,
             c="blue",
+        )
+    )
+    if subtitle:
+        title_subtitle.append(
+            dmc.Text(
+                subtitle,
+                fw=300,
+                fz="s",
+                c="grey",
+            )
+        )
+    items.append(
+        dmc.Stack(
+            title_subtitle,
+            gap=0,
         )
     )
     return dmc.Group(

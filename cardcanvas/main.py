@@ -26,6 +26,7 @@ from . import utils
 from .card_manager import CardManager
 
 _dash_renderer._set_react_version("18.2.0")
+dmc.add_figure_templates()
 
 
 class CardCanvas:
@@ -43,19 +44,20 @@ class CardCanvas:
         return self._app
 
     def _create_app(self, settings: dict[str, Any]) -> Dash:
-        title = settings.get("title", "Dash Dash")
+        title = settings.get("title", "Card Canvas")
+        subtitle = settings.get("subtitle", None)
         start_config = settings.get("start_config", {})
         logo = settings.get("logo", None)
         app = Dash(
             __name__,
-            external_stylesheets=[dmc.styles.NOTIFICATIONS],
+            external_stylesheets=[dmc.styles.NOTIFICATIONS, dmc.styles.CHARTS],
             suppress_callback_exceptions=True,
         )
         app.title = title
 
         title_layout = dmc.Group(
             [
-                utils.get_title_layout(title, logo),
+                utils.get_title_layout(title, subtitle=subtitle, logo=logo),
                 dmc.ActionIcon(
                     id="open-main-menu",
                     children=DashIconify(icon="mdi:menu"),

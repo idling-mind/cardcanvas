@@ -104,12 +104,19 @@ class Card(ABC):
             id={"type": "card-menu", "index": self.id},
             className="no-drag card-menu",
         )
+        try:
+            card_content = self.render()
+        except Exception as e:
+            card_content = html.Div(
+                html.Pre(f"Error rendering card: {str(e)}"),
+                style={"color": "red", "overflow": "auto"},
+            )
         children: list[Any] = [
             dcc.Loading(
                 html.Div(
                     id={"type": "card-content", "index": self.id},
                     style={"height": "100%"},
-                    children=self.render(),
+                    children=card_content,
                 ),
                 parent_style={"height": "100%"},
             ),
