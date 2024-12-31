@@ -4,7 +4,8 @@ import dash_mantine_components as dmc
 import datetime
 
 settings = {
-    "title": "Test App",
+    "title": "Card Canvas Demo",
+    "subtitle": "A Demo application showing the capabilities of CardCanvas",
     "start_config": {},
     "logo": "https://img.icons8.com/?size=80&id=cjlQopC5NR3D&format=png",
     "grid_compact_type": "vertical",
