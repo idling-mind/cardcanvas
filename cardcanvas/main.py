@@ -46,7 +46,8 @@ class CardCanvas:
     def _create_app(self, settings: dict[str, Any]) -> Dash:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
-        start_config = settings.get("start_config", {})
+        start_card_config = settings.get("start_config", {}).get("card_config", {})
+        start_card_layout = settings.get("start_config", {}).get("card_layout", {})
         logo = settings.get("logo", None)
         app = Dash(
             __name__,
@@ -108,6 +109,12 @@ class CardCanvas:
                                             "id": "reset-layout",
                                             "label": "Restore Layout",
                                             "icon": "mdi:refresh",
+                                        },
+                                        {
+                                            "id": "clear-layout",
+                                            "label": "Clear Layout",
+                                            "icon": "mdi:refresh",
+                                            "options": {"color": "red"},
                                         },
                                     ],
                                 },
@@ -177,10 +184,10 @@ class CardCanvas:
         )
         def initial_load(_app_layout, main_store):
             if main_store and isinstance(main_store, dict):
-                card_layouts = main_store.get("card_layouts", {"lg": []})
-                card_config = main_store.get("card_config", start_config)
+                card_layouts = main_store.get("card_layouts", start_card_layout)
+                card_config = main_store.get("card_config", start_card_config)
                 return card_layouts, card_config
-            return {"lg": []}, start_config
+            return start_card_layout, start_card_config
 
         @app.callback(
             Output("card-grid", "children"),
@@ -229,8 +236,8 @@ class CardCanvas:
             if not nclicks or not main_store or not isinstance(main_store, dict):
                 return no_update, no_update, no_update
             return (
-                main_store.get("card_layouts", {"lg": []}),
-                main_store.get("card_config", start_config),
+                main_store.get("card_layouts", start_card_layout),
+                main_store.get("card_config", start_card_config),
                 dmc.Notification(
                     title="Layout Reset",
                     message="The layout has been reset to the last saved state",
@@ -383,11 +390,9 @@ class CardCanvas:
             if not any(nclicks) or not ctx.triggered or not ctx.triggered_id:
                 return no_update, no_update
             if not card_config:
-                card_config = start_config
+                card_config = start_card_config
             card_id = ctx.triggered_id.get("index")
-            card_objects = self.card_manager.card_objects(
-                card_config, {"username": "yyxxxxx"}
-            )
+            card_objects = self.card_manager.card_objects(card_config, {})
             if card_id not in card_objects:
                 return dmc.Alert("Card not found", color="red"), True
             card = card_objects[card_id]
@@ -481,12 +486,37 @@ class CardCanvas:
                 data = json.loads(content)
                 return (
                     data,
-                    data.get("card_config", start_config),
-                    data.get("card_layouts", {"lg": []}),
+                    data.get("card_config", start_card_config),
+                    data.get("card_layouts", start_card_layout),
                 )
             except Exception as e:
                 logging.error(e)
             return {}
+
+        @app.callback(
+            Output("card-config-store", "data", allow_duplicate=True),
+            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("notification-container", "children", allow_duplicate=True),
+            Input("clear-layout", "n_clicks"),
+            prevent_initial_call=True,
+        )
+        def clear_layout(n_clicks):
+            if not n_clicks:
+                return no_update, no_update, no_update
+            return (
+                {},
+                {},
+                dmc.Notification(
+                    title="Layout Cleared",
+                    message=(
+                        "The layout has been cleared."
+                        " Click on save to save the changes."
+                        " Click on restore to restore the layout.",
+                    ),
+                    color="red",
+                    action="show",
+                ),
+            )
 
         @app.callback(
             Output("main-menu-collapse", "opened"),
