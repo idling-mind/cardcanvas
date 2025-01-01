@@ -46,8 +46,9 @@ class CardCanvas:
     def _create_app(self, settings: dict[str, Any]) -> Dash:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
-        start_card_config = settings.get("start_config", {}).get("card_config", {})
-        start_card_layout = settings.get("start_config", {}).get("card_layout", {})
+        start_config = settings.get("start_config", {})
+        start_card_config = start_config.get("card_config", {})
+        start_card_layout = start_config.get("card_layout", {})
         logo = settings.get("logo", None)
         app = Dash(
             __name__,
@@ -177,17 +178,30 @@ class CardCanvas:
         )
 
         @app.callback(
-            Output("card-layout-store", "data"),
-            Output("card-config-store", "data"),
+            Output("main-store", "data"),
             Input(app.layout, "layout"),
             State("main-store", "data"),
         )
         def initial_load(_app_layout, main_store):
             if main_store and isinstance(main_store, dict):
-                card_layouts = main_store.get("card_layouts", start_card_layout)
-                card_config = main_store.get("card_config", start_card_config)
-                return card_layouts, card_config
-            return start_card_layout, start_card_config
+                return no_update
+            return start_config
+
+        @app.callback(
+            Output("card-config-store", "data"),
+            Output("card-layout-store", "data"),
+            Input("main-store", "data"),
+            State("card-config-store", "data"),
+            State("card-layout-store", "data"),
+            prevent_initial_call=True,
+        )
+        def load_config(main_store, card_config, card_layouts):
+            if not main_store or not isinstance(main_store, dict):
+                return no_update, no_update
+            return (
+                main_store.get("card_config", start_card_config),
+                main_store.get("card_layouts", start_card_layout),
+            )
 
         @app.callback(
             Output("card-grid", "children"),
@@ -199,7 +213,7 @@ class CardCanvas:
             return self.card_manager.render(card_config, {}), card_layouts
 
         @app.callback(
-            Output("main-store", "data"),
+            Output("main-store", "data", allow_duplicate=True),
             Output("card-layout-store", "data", allow_duplicate=True),
             Output("notification-container", "children"),
             Input("save-layout", "n_clicks"),
@@ -323,7 +337,6 @@ class CardCanvas:
                 and isinstance(card_class_obj.grid_settings, dict)
             ):
                 new_layout_item.update(card_class_obj.grid_settings)
-                print("Updating grid settings", new_layout_item)
             if not card_layouts:
                 card_layouts = {"lg": []}
             for key in card_layouts.keys():
@@ -351,15 +364,12 @@ class CardCanvas:
             new_card_layout = copy.deepcopy(
                 next((item for item in card_layout if item["i"] == card_id))
             )
-            print("Duplicating card", card_id, new_card_layout)
             new_card = copy.deepcopy(card_config.get(card_id, None))
-            print("Duplicating card", card_id, new_card)
             new_card["id"] = new_card_id
             new_card_layout["i"] = new_card_id
             card_config[new_card_id] = new_card
             for key in card_layouts.keys():
                 card_layouts[key].append(new_card_layout)
-            print(card_layouts)
             return card_config, card_layouts
 
         @app.callback(
