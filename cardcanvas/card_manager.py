@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 
 from abc import ABC, abstractmethod
 from typing import Any
@@ -107,6 +108,7 @@ class Card(ABC):
         try:
             card_content = self.render()
         except Exception as e:
+            logging.error(f"Error rendering card: {str(e)}")
             card_content = html.Div(
                 html.Pre(f"Error rendering card: {str(e)}"),
                 style={"color": "red", "overflow": "auto"},
