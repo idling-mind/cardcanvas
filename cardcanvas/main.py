@@ -125,6 +125,7 @@ class CardCanvas:
                 ),
             ],
             opened=True,
+            style={"position": "sticky", "top": 10, "zIndex": 1000},
         )
 
         stage_layout = dmc.Container(
@@ -161,6 +162,7 @@ class CardCanvas:
             padding="md",
             closeOnClickOutside=False,
             withOverlay=False,
+            position="right",
         )
 
         app.layout = dmc.MantineProvider(

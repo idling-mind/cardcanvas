@@ -198,7 +198,7 @@ def render_buttons(button_map):
         "size": "compact-s",
         "p": "xs",
         # "radius": "xl",
-        "variant": "light",
+        # "variant": "light",
     }
     for item in button_map:
         if "children" in item:
