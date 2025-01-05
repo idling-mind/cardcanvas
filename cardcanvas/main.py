@@ -49,7 +49,7 @@ class CardCanvas:
         subtitle = settings.get("subtitle", None)
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
-        start_card_layout = start_config.get("card_layout", {})
+        start_card_layout = start_config.get("card_layout", {"lg": []})
         logo = settings.get("logo", None)
         app = Dash(
             __name__, **self.dash_options,
@@ -134,7 +134,7 @@ class CardCanvas:
                 ),
             ],
             opened=True,
-            style={"position": "sticky", "top": 10, "zIndex": 1000},
+            style={"position": "sticky", "top": 10},
         )
 
         stage_layout = dmc.Container(
