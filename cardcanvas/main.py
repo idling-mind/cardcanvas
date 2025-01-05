@@ -122,7 +122,7 @@ class CardCanvas:
                                 },
                             ]
                         ),
-                        dmc.Checkbox(
+                        dmc.Switch(
                             "Editable Layout",
                             id="edit-layout",
                             size="xs",
