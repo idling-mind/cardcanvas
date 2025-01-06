@@ -29,6 +29,7 @@ class Card(ABC):
     icon = "mdi:file-document-edit"
     color: str = "#336699"
     interval: int | None = None
+    grid_settings: dict[str, int] | None = None
 
     def __init__(
         self,
@@ -138,7 +139,6 @@ class Card(ABC):
             id=self.id,
         )
 
-    @abstractmethod
     def render_settings(self):
         """Render the settings for the card.
 
@@ -157,7 +157,7 @@ class Card(ABC):
         Note: The control's value property is used to update the settings dictionary.
         Right now, no other property name is supported.
         """
-        pass
+        return dmc.Text("Settings not implemented yet.")
 
 
 class CardManager:
