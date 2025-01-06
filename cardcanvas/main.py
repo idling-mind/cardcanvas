@@ -134,7 +134,7 @@ class CardCanvas:
                 ),
             ],
             opened=True,
-            style={"position": "sticky", "top": 10},
+            style={"position": "sticky", "top": 10, "zIndex": 10},
         )
 
         stage_layout = dmc.Container(
