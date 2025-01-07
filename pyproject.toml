@@ -1,6 +1,6 @@
 [project]
 name = "cardcanvas"
-version = "0.0.5"
+version = "0.0.6"
 description = "Configurable dashboard with dash"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -19,3 +19,6 @@ dev = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.setuptools.package-data]
+cardcanvas = ["assets/*"]
