@@ -29,6 +29,8 @@ swatches = [
     "#fab005",
     "#fd7e14",
 ]
+
+
 class TimeCard(Card):
     title = "Sample Card"
     description = "This is a sample card."
@@ -70,6 +72,7 @@ class TimeCard(Card):
                 ),
             ]
         )
+
 
 class Options(Card):
     title = "List of options"

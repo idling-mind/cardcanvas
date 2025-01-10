@@ -22,7 +22,7 @@ from dash import (
 from dash_snap_grid import ResponsiveGrid
 from dash_iconify import DashIconify
 
-from . import utils
+from . import ui
 from .card_manager import CardManager
 
 _dash_renderer._set_react_version("18.2.0")
@@ -30,7 +30,9 @@ dmc.add_figure_templates()
 
 
 class CardCanvas:
-    def __init__(self, settings: dict[str, Any], dash_options: dict[str, Any] | None = None):
+    def __init__(
+        self, settings: dict[str, Any], dash_options: dict[str, Any] | None = None
+    ):
         self.settings = settings
         self.card_manager = CardManager()
         self.dash_options = dash_options or {}
@@ -52,7 +54,8 @@ class CardCanvas:
         start_card_layout = start_config.get("card_layout", {"lg": []})
         logo = settings.get("logo", None)
         app = Dash(
-            __name__, **self.dash_options,
+            __name__,
+            **self.dash_options,
             external_stylesheets=[dmc.styles.NOTIFICATIONS, dmc.styles.CHARTS],
             suppress_callback_exceptions=True,
         )
@@ -60,7 +63,7 @@ class CardCanvas:
 
         title_layout = dmc.Group(
             [
-                utils.get_title_layout(title, subtitle=subtitle, logo=logo),
+                ui.get_title_layout(title, subtitle=subtitle, logo=logo),
                 dmc.ActionIcon(
                     id="open-main-menu",
                     children=DashIconify(icon="mdi:menu"),
@@ -73,68 +76,10 @@ class CardCanvas:
         main_buttons = dmc.Collapse(
             id="main-menu-collapse",
             children=[
-                dmc.Group(
-                    [
-                        utils.render_buttons(
-                            [
-                                # {
-                                #     "id": "open-settings",
-                                #     "label": "Open Settings",
-                                #     "icon": "mdi:settings",
-                                # },
-                                {
-                                    "id": "add-cards",
-                                    "label": "Add Cards",
-                                    "icon": "mdi:plus",
-                                },
-                                {
-                                    "id": "",
-                                    "label": "Layout",
-                                    "children": [
-                                        {
-                                            "id": "upload-layout",
-                                            "type": "upload",
-                                            "label": "Upload Layout",
-                                            "icon": "mdi:upload",
-                                        },
-                                        {
-                                            "id": "download-layout",
-                                            "label": "Download Layout",
-                                            "icon": "mdi:download",
-                                        },
-                                        {
-                                            "id": "save-layout",
-                                            "label": "Save Layout",
-                                            "icon": "mdi:content-save",
-                                        },
-                                        {
-                                            "id": "reset-layout",
-                                            "label": "Restore Layout",
-                                            "icon": "mdi:refresh",
-                                        },
-                                        {
-                                            "id": "clear-layout",
-                                            "label": "Clear Layout",
-                                            "icon": "mdi:refresh",
-                                            "options": {"color": "red"},
-                                        },
-                                    ],
-                                },
-                            ]
-                        ),
-                        dmc.Switch(
-                            "Editable Layout",
-                            id="edit-layout",
-                            size="xs",
-                            checked=False,
-                            persistence=True,
-                        ),
-                    ],
-                    pl="xs",
-                ),
+                ui.main_buttons()
             ],
             opened=True,
-            style={"position": "sticky", "top": 10, "zIndex": 10},
+            style={"position": "sticky", "top": 0, "zIndex": 10},
         )
 
         stage_layout = dmc.Container(
@@ -300,7 +245,7 @@ class CardCanvas:
                         ),
                         dmc.Stack(
                             [
-                                utils.render_card_preview(card_class)
+                                ui.render_card_preview(card_class)
                                 for card_class in self.card_manager.card_classes.values()
                             ]
                         ),
