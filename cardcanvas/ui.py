@@ -62,7 +62,7 @@ def main_buttons():
                         **button_settings,
                     ),
                     icon_with_tooltip(
-                        id="reset-layout",
+                        id="restore-layout",
                         icon="mdi:restore",
                         title="Reset Layout",
                         tooltip="Reset the layout to the default layout.",

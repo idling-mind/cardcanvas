@@ -126,16 +126,6 @@ class CardCanvas:
         )
 
         @app.callback(
-            Output("main-store", "data"),
-            Input(app.layout, "layout"),
-            State("main-store", "data"),
-        )
-        def initial_load(_app_layout, main_store):
-            if main_store and isinstance(main_store, dict):
-                return no_update
-            return start_config
-
-        @app.callback(
             Output("card-config-store", "data"),
             Output("card-layout-store", "data"),
             Input("main-store", "data"),
@@ -158,7 +148,9 @@ class CardCanvas:
             State("card-layout-store", "data"),
         )
         def load_cards(card_config, card_layouts):
-            return self.card_manager.render(card_config, {}), card_layouts
+            initial_layout = start_config.get("card_layouts", {"lg": []})
+            initial_config = start_config.get("card_config", {})
+            return self.card_manager.render(card_config or initial_config), card_layouts or initial_layout
 
         @app.callback(
             Output("main-store", "data", allow_duplicate=True),
@@ -190,7 +182,7 @@ class CardCanvas:
             Output("card-layout-store", "data", allow_duplicate=True),
             Output("card-config-store", "data", allow_duplicate=True),
             Output("notification-container", "children", allow_duplicate=True),
-            Input("reset-layout", "n_clicks"),
+            Input("restore-layout", "n_clicks"),
             State("main-store", "data"),
             prevent_initial_call=True,
         )
