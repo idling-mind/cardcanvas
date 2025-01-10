@@ -21,7 +21,7 @@ def button_with_tooltip(id, icon, title, tooltip, **button_settings):
 def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
     return dmc.ActionIcon(
             children=dmc.Tooltip(
-                children=DashIconify(icon=icon),
+                children=DashIconify(icon=icon, width=25),
                 label=tooltip,
             ),
             id=id,
@@ -31,7 +31,7 @@ def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
 def main_buttons():
     button_settings = {
         "size": "compact-s",
-        "p": "xs",
+        "p": 5,
     }
     return dmc.Group(
         [
@@ -62,17 +62,25 @@ def main_buttons():
                         **button_settings,
                     ),
                     icon_with_tooltip(
-                        id="restore-layout",
-                        icon="mdi:restore",
-                        title="Reset Layout",
-                        tooltip="Reset the layout to the default layout.",
-                        **button_settings,
-                    ),
-                    icon_with_tooltip(
                         id="save-layout",
                         icon="mdi:content-save",
                         title="Save Layout",
                         tooltip="Save the current layout to the browser's local storage.",
+                        **button_settings,
+                    ),
+                    icon_with_tooltip(
+                        id="restore-layout",
+                        icon="mdi:restore-clock",
+                        title="Reset Layout",
+                        tooltip="Restore the layout to last saved layout.",
+                        **button_settings,
+                    ),
+                    icon_with_tooltip(
+                        id="reset-layout",
+                        icon="mdi:restore",
+                        title="Reset Layout",
+                        tooltip="Reset the layout to the default layout.",
+                        color="yellow",
                         **button_settings,
                     ),
                     icon_with_tooltip(
