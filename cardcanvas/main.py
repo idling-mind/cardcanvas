@@ -49,6 +49,7 @@ class CardCanvas:
     def _create_app(self, settings: dict[str, Any]) -> Dash:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
+        title_component = settings.get("title_component", None)
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
         start_card_layout = start_config.get("card_layout", {"lg": []})
@@ -59,11 +60,11 @@ class CardCanvas:
             external_stylesheets=[dmc.styles.NOTIFICATIONS, dmc.styles.CHARTS],
             suppress_callback_exceptions=True,
         )
-        app.title = title
+        app.title = f"{title}: {subtitle}" if subtitle else title
 
         title_layout = dmc.Group(
             [
-                ui.get_title_layout(title, subtitle=subtitle, logo=logo),
+                title_component if title_component else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
                 dmc.ActionIcon(
                     id="open-main-menu",
                     children=DashIconify(icon="mdi:menu"),
@@ -71,6 +72,7 @@ class CardCanvas:
                 ),
             ],
             justify="space-between",
+            p="xs"
         )
 
         main_buttons = dmc.Collapse(

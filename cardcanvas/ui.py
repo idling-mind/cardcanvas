@@ -137,10 +137,7 @@ def get_title_layout(title: str, subtitle: str | None = None, logo: str | None =
             gap=0,
         )
     )
-    return dmc.Group(
-        items,
-        p="xs",
-    )
+    return dmc.Group(items)
 
 
 def render_card_in_container(card):
