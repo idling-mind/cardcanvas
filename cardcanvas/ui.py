@@ -20,18 +20,18 @@ def button_with_tooltip(id, icon, title, tooltip, **button_settings):
 
 def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
     return dmc.ActionIcon(
-            children=dmc.Tooltip(
-                children=DashIconify(icon=icon, width=25),
-                label=tooltip,
-            ),
-            id=id,
-            **button_settings,
-        )
+        children=dmc.Tooltip(
+            children=DashIconify(icon=icon, width=20, style={"margin": "5px"}),
+            label=tooltip,
+        ),
+        id=id,
+        **button_settings,
+    )
 
 def main_buttons():
     button_settings = {
         "size": "compact-s",
-        "p": 5,
+        "p": 4,
     }
     return dmc.Group(
         [

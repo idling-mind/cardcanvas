@@ -52,7 +52,7 @@ class CardCanvas:
         title_component = settings.get("title_component", None)
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
-        start_card_layout = start_config.get("card_layout", {"lg": []})
+        start_card_layout = start_config.get("card_layouts", {"lg": []})
         logo = settings.get("logo", None)
         app = Dash(
             __name__,
@@ -64,7 +64,9 @@ class CardCanvas:
 
         title_layout = dmc.Group(
             [
-                title_component if title_component else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
+                title_component
+                if title_component
+                else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
                 dmc.ActionIcon(
                     id="open-main-menu",
                     children=DashIconify(icon="mdi:menu"),
@@ -72,14 +74,12 @@ class CardCanvas:
                 ),
             ],
             justify="space-between",
-            p="xs"
+            p="xs",
         )
 
         main_buttons = dmc.Collapse(
             id="main-menu-collapse",
-            children=[
-                ui.main_buttons()
-            ],
+            children=[ui.main_buttons()],
             opened=True,
             style={"position": "sticky", "top": 0, "zIndex": 10},
         )
@@ -105,8 +105,14 @@ class CardCanvas:
         invisible_controls = html.Div(
             children=[
                 dcc.Store(id="cardcanvas-main-store", storage_type="local"),
-                dcc.Store(id="cardcanvas-config-store", storage_type="memory"),
-                dcc.Store(id="cardcanvas-layout-store", storage_type="memory"),
+                dcc.Store(
+                    id="cardcanvas-config-store",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-layout-store",
+                    storage_type="memory",
+                ),
                 dcc.Download(id="download-layout-data"),
                 dmc.NotificationProvider(),
                 html.Div(id="notification-container"),
@@ -128,29 +134,26 @@ class CardCanvas:
         @app.callback(
             Output("cardcanvas-config-store", "data"),
             Output("cardcanvas-layout-store", "data"),
-            Input("cardcanvas-main-store", "data"),
-            State("cardcanvas-config-store", "data"),
-            State("cardcanvas-layout-store", "data"),
-            prevent_initial_call=True,
+            Input(app.layout, "layout"),
+            State("cardcanvas-main-store", "data"),
         )
-        def load_config(main_store, card_config, card_layouts):
-            if not main_store or not isinstance(main_store, dict):
-                return no_update, no_update
-            return (
-                main_store.get("card_config", start_card_config),
-                main_store.get("card_layouts", start_card_layout),
-            )
+        def load_layout(layout, main_store):
+            if not main_store:
+                main_store = {}
+
+            card_config = main_store.get("card_config", start_card_config)
+            card_layouts = main_store.get("card_layouts", start_card_layout)
+            return card_config, card_layouts
 
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
             Input("cardcanvas-config-store", "data"),
-            State("cardcanvas-layout-store", "data"),
+            Input("cardcanvas-layout-store", "data"),
+            prevent_initial_call=True,
         )
         def load_cards(card_config, card_layouts):
-            initial_layout = start_config.get("card_layouts", {"lg": []})
-            initial_config = start_config.get("card_config", {})
-            return self.card_manager.render(card_config or initial_config), card_layouts or initial_layout
+            return self.card_manager.render(card_config), card_layouts
 
         @app.callback(
             Output("cardcanvas-main-store", "data", allow_duplicate=True),
@@ -169,6 +172,8 @@ class CardCanvas:
                     "card_layouts": card_layouts,
                     "card_config": card_config,
                 },
+                # This is required since there may be changes in the layout which
+                # are not reflected in the cardcanvas_layout_store
                 card_layouts,
                 dmc.Notification(
                     title="Layout Saved",
@@ -314,20 +319,26 @@ class CardCanvas:
 
         @app.callback(
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Input({"type": "card-delete", "index": ALL}, "n_clicks"),
             State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
             prevent_initial_call=True,
         )
-        def delete_card(nclicks, card_config):
+        def delete_card(nclicks, card_config, card_layouts):
             if not card_config:
-                return no_update
+                return no_update, no_update
             if not any(nclicks) or not ctx.triggered:
-                return no_update
+                return no_update, no_update
             if not ctx.triggered_id or not isinstance(ctx.triggered_id, dict):
-                return no_update
+                return no_update, no_update
             card_id = ctx.triggered_id.get("index")
             card_config.pop(card_id, None)
-            return card_config
+            for key in card_layouts.keys():
+                card_layouts[key] = [
+                    item for item in card_layouts[key] if item["i"] != card_id
+                ]
+            return card_config, card_layouts
 
         @app.callback(
             Output("settings-layout", "children", allow_duplicate=True),
@@ -460,6 +471,31 @@ class CardCanvas:
                     title="Layout Cleared",
                     message=(
                         "The layout has been cleared."
+                        " Click on save to save the changes."
+                        " Click on restore to restore the layout.",
+                    ),
+                    color="red",
+                    action="show",
+                ),
+            )
+
+        @app.callback(
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
+            Output("notification-container", "children", allow_duplicate=True),
+            Input("reset-layout", "n_clicks"),
+            prevent_initial_call=True,
+        )
+        def reset_layout(n_clicks):
+            if not n_clicks:
+                return no_update, no_update, no_update
+            return (
+                start_card_config,
+                start_card_layout,
+                dmc.Notification(
+                    title="Layout Reset",
+                    message=(
+                        "The layout has been reset to default layout."
                         " Click on save to save the changes."
                         " Click on restore to restore the layout.",
                     ),
