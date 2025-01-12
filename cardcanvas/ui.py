@@ -32,6 +32,7 @@ def main_buttons():
     button_settings = {
         "size": "compact-s",
         "p": 4,
+        "variant": "light",
     }
     return dmc.Group(
         [
@@ -123,13 +124,7 @@ def get_title_layout(title: str, subtitle: str | None = None, logo: str | None =
         items.append(
             html.Img(src=logo, height=70),
         )
-    title_subtitle.append(
-        dmc.Title(
-            title,
-            order=2,
-            c="blue",
-        )
-    )
+    title_subtitle.append(dmc.Title(title, order=2, c="blue"))
     if subtitle:
         title_subtitle.append(
             dmc.Text(
@@ -254,4 +249,24 @@ def render_card_preview(card_class) -> DraggableDiv:
             )
         ],
         id=card_class.__name__,
+    )
+
+def footer():
+    return dmc.Group(
+        [
+            dmc.Text(
+                "Made with ",
+                fw=300,
+                fz="md",
+                c="grey",
+            ),
+            dcc.Link(
+                dmc.Image(src="/assets/logo.png", style={"height": 30}),
+                href="https://github.com/idling-mind/cardcanvas",
+                target="_blank",
+            ),
+        ],
+        gap="xs",
+        justify="center",
+        p="xl",
     )

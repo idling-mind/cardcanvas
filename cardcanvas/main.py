@@ -24,6 +24,7 @@ from dash_iconify import DashIconify
 
 from . import ui, helpers
 from .card_manager import CardManager
+from .settings import DEFAULT_THEME
 
 _dash_renderer._set_react_version("18.2.0")
 dmc.add_figure_templates()
@@ -50,11 +51,12 @@ class CardCanvas:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
         title_component = settings.get("title_component", None)
+        footer_component = settings.get("footer_component", ui.footer())
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
         start_card_layout = start_config.get("card_layouts", {"lg": []})
         logo = settings.get("logo", None)
-        theme = settings.get("theme", {})
+        theme = settings.get("theme", DEFAULT_THEME)
         app = Dash(
             __name__,
             **self.dash_options,
@@ -92,6 +94,7 @@ class CardCanvas:
                 main_buttons,
                 ResponsiveGrid(
                     id="card-grid",
+                    children=[dmc.Loader(color="blue", size="xl", variant="oval")],
                     cols={"lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
                     rowHeight=settings.get("grid_row_height", 50),
                     compactType=settings.get("grid_compact_type", None),
@@ -100,6 +103,7 @@ class CardCanvas:
                     layouts={"lg": []},
                     width=100,
                 ),
+                footer_component,
             ],
         )
 
