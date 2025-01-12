@@ -94,7 +94,7 @@ class CardCanvas:
                 main_buttons,
                 ResponsiveGrid(
                     id="card-grid",
-                    children=[dmc.Loader(color="blue", size="xl", variant="oval")],
+                    children=[],
                     cols={"lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
                     rowHeight=settings.get("grid_row_height", 50),
                     compactType=settings.get("grid_compact_type", None),
