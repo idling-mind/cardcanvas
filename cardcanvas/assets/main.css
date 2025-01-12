@@ -14,3 +14,6 @@ body {
     top: var(--card-menu-top);
         right: var(--card-menu-right);
 }
+.react-grid-layout {
+    min-height: 50px;
+}
