@@ -138,6 +138,7 @@ class CardCanvas:
             closeOnClickOutside=False,
             withOverlay=False,
             position="right",
+            lockScroll=False,
         )
 
         app.layout = dmc.MantineProvider(
