@@ -22,7 +22,7 @@ from dash import (
 from dash_snap_grid import ResponsiveGrid
 from dash_iconify import DashIconify
 
-from . import ui
+from . import ui, helpers
 from .card_manager import CardManager
 
 _dash_renderer._set_react_version("18.2.0")
@@ -54,6 +54,7 @@ class CardCanvas:
         start_card_config = start_config.get("card_config", {})
         start_card_layout = start_config.get("card_layouts", {"lg": []})
         logo = settings.get("logo", None)
+        theme = settings.get("theme", {})
         app = Dash(
             __name__,
             **self.dash_options,
@@ -113,6 +114,14 @@ class CardCanvas:
                     id="cardcanvas-layout-store",
                     storage_type="memory",
                 ),
+                dcc.Store(
+                    id="cardcanvas-config-store-current",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-layout-store-current",
+                    storage_type="memory",
+                ),
                 dcc.Download(id="download-layout-data"),
                 dmc.NotificationProvider(),
                 html.Div(id="notification-container"),
@@ -128,7 +137,8 @@ class CardCanvas:
         )
 
         app.layout = dmc.MantineProvider(
-            [stage_layout, settings_layout, invisible_controls]
+            [stage_layout, settings_layout, invisible_controls],
+            theme=theme,
         )
 
         @app.callback(
@@ -148,12 +158,29 @@ class CardCanvas:
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
+            Output("cardcanvas-config-store-current", "data"),
+            Output("cardcanvas-layout-store-current", "data"),
             Input("cardcanvas-config-store", "data"),
             Input("cardcanvas-layout-store", "data"),
+            State("cardcanvas-config-store-current", "data"),
+            State("cardcanvas-layout-store-current", "data"),
+            State("card-grid", "layouts"),
             prevent_initial_call=True,
         )
-        def load_cards(card_config, card_layouts):
-            return self.card_manager.render(card_config), card_layouts
+        def load_cards(
+            card_config, card_layout_store, current_config, current_layout, layout
+        ):
+            if helpers.compare_dicts(card_config, current_config):
+                new_children = no_update
+            else:
+                new_children = self.card_manager.render(card_config)
+            if helpers.compare_dicts(
+                card_layout_store, current_layout
+            ) and helpers.compare_dicts(layout, current_layout):
+                new_layout = no_update
+            else:
+                new_layout = card_layout_store
+            return new_children, new_layout, card_config, card_layout_store
 
         @app.callback(
             Output("cardcanvas-main-store", "data", allow_duplicate=True),
