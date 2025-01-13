@@ -1,14 +1,10 @@
 :root {
-    --main-bg-color: rgb(239, 239, 239);
     --card-menu-top: 5px;
     --card-menu-right: 5px;
 }
-body {
-    background-color: var(--main-bg-color);
+#main-menu-collapse {
+    background-color: var(--mantine-color-body);
     }
-        #main-menu-collapse {
-            background-color: var(--main-bg-color);
-        }
 .card-menu {
     position: absolute;
     top: var(--card-menu-top);

@@ -101,9 +101,24 @@ def main_buttons():
                 checked=False,
                 persistence=True,
             ),
+            dmc.ActionIcon(
+                [
+                    dmc.Paper(
+                        DashIconify(icon="radix-icons:sun", width=25), darkHidden=True
+                    ),
+                    dmc.Paper(
+                        DashIconify(icon="radix-icons:moon", width=25), lightHidden=True
+                    ),
+                ],
+                variant="transparent",
+                color="yellow",
+                id="color-scheme-toggle",
+                size="lg",
+                ms="auto",
+            ),
         ],
         id="toolbar",
-        p = "xs",
+        p="xs",
     )
 
 
@@ -261,7 +276,7 @@ def footer():
                 c="grey",
             ),
             dcc.Link(
-                dmc.Image(src="/assets/logo.png", style={"height": 30}),
+                dmc.Image(src="/assets/logo.svg", style={"height": 30}),
                 href="https://github.com/idling-mind/cardcanvas",
                 target="_blank",
             ),

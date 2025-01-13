@@ -144,6 +144,8 @@ class CardCanvas:
         app.layout = dmc.MantineProvider(
             [stage_layout, settings_layout, invisible_controls],
             theme=theme,
+            id="mantine-provider",
+            forceColorScheme="light",
         )
 
         @app.callback(
@@ -544,5 +546,14 @@ class CardCanvas:
         )
         def open_main_menu(n_clicks, status):
             return not status
+
+        @app.callback(
+            Output("mantine-provider", "forceColorScheme"),
+            Input("color-scheme-toggle", "n_clicks"),
+            State("mantine-provider", "forceColorScheme"),
+            prevent_initial_call=True,
+        )
+        def switch_theme(_, theme):
+            return "dark" if theme == "light" else "light"
 
         return app
