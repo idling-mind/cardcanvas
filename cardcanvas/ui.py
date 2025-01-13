@@ -254,8 +254,8 @@ def render_card_preview(card_class) -> DraggableDiv:
                         ),
                         dmc.Stack(
                             [
-                                dmc.Text(card_class.title, fw=500, fz=20, c="#666"),
-                                dmc.Text(card_class.description, fz=14, c="#999"),
+                                dmc.Text(card_class.title, fw=500, fz=20, c="grey.4"),
+                                dmc.Text(card_class.description, fz=14, c="grey"),
                             ],
                             gap=0,
                         ),
@@ -264,7 +264,8 @@ def render_card_preview(card_class) -> DraggableDiv:
                 ),
                 style={"cursor": "grab"},
                 p="sm",
-                bg="#f2f2f2",
+                shadow="xs",
+                withBorder=True,
             )
         ],
         id=card_class.__name__,
