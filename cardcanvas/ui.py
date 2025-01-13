@@ -7,6 +7,7 @@ from dash import dcc, html
 from dash_iconify import DashIconify
 from dash_snap_grid import DraggableDiv
 
+
 def button_with_tooltip(id, icon, title, tooltip, **button_settings):
     return dmc.Tooltip(
         dmc.Button(
@@ -18,6 +19,7 @@ def button_with_tooltip(id, icon, title, tooltip, **button_settings):
         label=tooltip,
     )
 
+
 def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
     return dmc.ActionIcon(
         children=dmc.Tooltip(
@@ -27,6 +29,7 @@ def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
         id=id,
         **button_settings,
     )
+
 
 def main_buttons():
     button_settings = {
@@ -223,6 +226,7 @@ def render_card_in_container(card):
         id=card.id,
     )
 
+
 def render_card_preview(card_class) -> DraggableDiv:
     """Renders a card preview in the card gallery
 
@@ -265,6 +269,7 @@ def render_card_preview(card_class) -> DraggableDiv:
         ],
         id=card_class.__name__,
     )
+
 
 def footer():
     return dmc.Group(
