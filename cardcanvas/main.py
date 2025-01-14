@@ -51,7 +51,7 @@ class CardCanvas:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
         title_component = settings.get("title_component", None)
-        footer_component = settings.get("footer_component", ui.footer())
+        footer_component = settings.get("footer_component", None)
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
         start_card_layout = start_config.get("card_layouts", {"lg": []})
@@ -103,7 +103,6 @@ class CardCanvas:
                     layouts={"lg": []},
                     width=100,
                 ),
-                footer_component,
             ],
         )
 
@@ -141,8 +140,12 @@ class CardCanvas:
             lockScroll=False,
         )
 
+        main_components = [stage_layout, settings_layout, invisible_controls]
+        if footer_component:
+            main_components.append(footer_component)
+
         app.layout = dmc.MantineProvider(
-            [stage_layout, settings_layout, invisible_controls],
+            children=main_components,
             theme=theme,
             id="mantine-provider",
             forceColorScheme="light",

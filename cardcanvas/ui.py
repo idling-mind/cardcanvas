@@ -186,8 +186,8 @@ def render_card_preview(card_class) -> DraggableDiv:
                         ),
                         dmc.Stack(
                             [
-                                dmc.Text(card_class.title, fw=500, fz=20, c="grey.4"),
-                                dmc.Text(card_class.description, fz=14, c="grey"),
+                                dmc.Text(card_class.title, fw=500, fz=20, c="gray"),
+                                dmc.Text(card_class.description, fz=14, c="gray"),
                             ],
                             gap=0,
                         ),
@@ -201,25 +201,4 @@ def render_card_preview(card_class) -> DraggableDiv:
             )
         ],
         id=card_class.__name__,
-    )
-
-
-def footer():
-    return dmc.Group(
-        [
-            dmc.Text(
-                "Made with ",
-                fw=300,
-                fz="md",
-                c="grey",
-            ),
-            dcc.Link(
-                dmc.Image(src="/assets/logo.svg", style={"height": 30}),
-                href="https://github.com/idling-mind/cardcanvas",
-                target="_blank",
-            ),
-        ],
-        gap="xs",
-        justify="center",
-        p="xl",
     )
