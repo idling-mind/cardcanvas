@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 import dash_mantine_components as dmc
 from dash import dcc, html
 from dash_iconify import DashIconify
@@ -159,72 +157,6 @@ def get_title_layout(title: str, subtitle: str | None = None, logo: str | None =
         )
     )
     return dmc.Group(items)
-
-
-def render_card_in_container(card):
-    """Renders a card with a menu on the top right corner.
-
-    Args:
-        card (Card): The card object (derived from Card).
-
-    Returns:
-        dash.html.Div: The card with a menu at the top.
-    """
-    buttons = html.Div(
-        dmc.Menu(
-            [
-                dmc.MenuTarget(
-                    dmc.ActionIcon(
-                        DashIconify(icon="material-symbols:more-horiz"),
-                        size="xs",
-                        radius="xl",
-                        variant="light",
-                        color="grey",
-                    )
-                ),
-                dmc.MenuDropdown(
-                    [
-                        dmc.MenuItem(
-                            "Settings",
-                            id={"type": "card-settings", "index": card.id},
-                            className="no-drag",
-                        ),
-                        dmc.MenuItem(
-                            "Delete",
-                            id={"type": "card-delete", "index": card.id},
-                            className="no-drag",
-                        ),
-                    ]
-                ),
-            ],
-        ),
-        id={"type": "card-menu", "index": card.id},
-        className="no-drag card-menu",
-    )
-    children: list[Any] = [
-        dcc.Loading(
-            html.Div(
-                card.render(),
-                id={"type": "card-content", "index": card.id},
-                style={"height": "100%"},
-            ),
-            parent_style={"height": "100%"},
-        ),
-        buttons,
-    ]
-    if hasattr(card, "interval"):
-        children.append(
-            dcc.Interval(
-                id={"type": "card-interval", "index": card.id},
-                interval=card.interval,
-                disabled=False,
-            )
-        )
-    return html.Div(
-        children,
-        style={"position": "relative", "height": "100%"},
-        id=card.id,
-    )
 
 
 def render_card_preview(card_class) -> DraggableDiv:
