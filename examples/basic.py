@@ -30,11 +30,11 @@ class TextCard(Card):
         return dmc.Stack(
             [
                 dmc.TextInput(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "text"},
+                    id={"type": "card-settings", "id": self.id, "setting": "text"},
                     value=self.settings.get("text", "Hello CardCanvas"),
                 ),
                 dmc.ColorPicker(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "color"},
+                    id={"type": "card-settings", "id": self.id, "setting": "color"},
                     value=self.settings.get("color", "grey"),
                 ),
             ]

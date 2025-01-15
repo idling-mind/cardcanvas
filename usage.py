@@ -57,7 +57,11 @@ class TimeCard(Card):
         return dmc.Stack(
             [
                 dmc.ColorPicker(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "text-color"},
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "text-color",
+                    },
                     value=self.settings.get("text-color", "grey"),
                     swatches=swatches,
                 ),
@@ -65,7 +69,7 @@ class TimeCard(Card):
                     id={
                         "type": "card-settings",
                         "id": self.id,
-                        "sub-id": "background-color",
+                        "setting": "background-color",
                     },
                     value=self.settings.get("background-color", "grey"),
                     swatches=swatches,
@@ -90,7 +94,7 @@ class Options(Card):
 
     def render_settings(self):
         return dmc.MultiSelect(
-            id={"type": "card-settings", "id": self.id, "sub-id": "option"},
+            id={"type": "card-settings", "id": self.id, "setting": "option"},
             placeholder="Select an option",
             label="Select an option",
             value=self.settings.get("option", []),
@@ -117,7 +121,7 @@ class ColorCard(Card):
         return dmc.Stack(
             [
                 dmc.ColorPicker(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "color"},
+                    id={"type": "card-settings", "id": self.id, "setting": "color"},
                     value=self.settings.get("color", "grey"),
                     swatches=swatches,
                 ),

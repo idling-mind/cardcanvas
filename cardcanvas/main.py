@@ -408,8 +408,8 @@ class CardCanvas:
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("settings-layout", "opened", allow_duplicate=True),
             Input("settings_ok", "n_clicks"),
-            State({"type": "card-settings", "id": ALL, "sub-id": ALL}, "value"),
-            State({"type": "card-settings", "id": ALL, "sub-id": ALL}, "id"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "value"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "id"),
             State("cardcanvas-config-store", "data"),
             prevent_initial_call=True,
         )
@@ -418,7 +418,7 @@ class CardCanvas:
                 return no_update, no_update
             for idx, val in zip(ids, values):
                 card_id = idx.get("id")
-                sub_id = idx.get("sub-id")
+                sub_id = idx.get("setting")
                 if card_id not in card_config:
                     continue
                 card_config[card_id]["settings"][sub_id] = val

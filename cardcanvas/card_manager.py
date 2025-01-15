@@ -149,7 +149,7 @@ class Card(ABC):
         Each control in the settings modal should be a dash input field which has
         a value prop. The control should have an id that matches with
         the following template.
-        `id={"type": "card-settings", "id": self.id, "sub-id": "control-id"}`
+        `id={"type": "card-settings", "id": self.id, "setting": "control-id"}`
         Here `control-id` is the id of the control in the settings drawer.
         This control-id will be the key in the settings dictionary that is passed
         to the card's render method.
