@@ -32,6 +32,9 @@ data = pd.read_csv(
     "https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"
 )
 data["Survived"] = data["Survived"].apply(lambda x: "Survived" if x == 1 else "Died")
+data["Pclass"] = data["Pclass"].apply(lambda x: f"Class {x}")
+data["Embarked"] = data["Embarked"].map({"C": "Cherbourg", "Q": "Queenstown", "S": "Southampton"})
+data["Sex"] = data["Sex"].str.title()
 
 class HistogramCard(Card):
     title = "Histogram"
