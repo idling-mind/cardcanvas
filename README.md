@@ -55,3 +55,5 @@ canvas.card_manager.register_card_class(TextCard)
 
 canvas.app.run_server(debug=True)
 ```
+
+Have a look at `usage.py` or the folder `examples` to see more examples.
