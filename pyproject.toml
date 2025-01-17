@@ -1,6 +1,6 @@
 [project]
 name = "cardcanvas"
-version = "0.0.6"
+version = "0.1.0"
 description = "Configurable dashboard with dash"
 readme = "README.md"
 requires-python = ">=3.10"

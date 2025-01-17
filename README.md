@@ -8,6 +8,7 @@ dashboards and also analyze and present the data the way they want.
 
 CardCanvas is built using [plotly Dash](https://dash.plotly.com/). The UI is built using
 [dash-mantine-components](https://www.dash-mantine-components.com/).
+The drag and drop is built using [dash-snap-grid](https://github.com/idling-mind/dash_snap_grid).
 
 
 Here's a simple example code.
