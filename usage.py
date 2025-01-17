@@ -92,6 +92,7 @@ class Options(Card):
                 f"You have selected {','.join(self.settings.get('option', []))}",
             ),
             style={"height": "100%", "width": "100%"},
+            withBorder=True,
         )
 
     def render_settings(self):
