@@ -23,7 +23,7 @@ from dash_iconify import DashIconify
 settings = {
     "title": "Card Canvas Charts Demo",
     "subtitle": "A Demo application showing the capabilities of CardCanvas with charts",
-    "start_config": {},
+    "start_config": json.loads((Path(__file__).parent / "layout.json").read_text()),
     "grid_compact_type": "vertical",
     "grid_row_height": 120,
 }
@@ -841,6 +841,41 @@ class HightlightCard(Card):
         input_id = json.loads(ctx.triggered[0]["prop_id"].split(".")[0])
         return generate_filter(column, input_id)
 
+class MarkdownCard(Card):
+    title = "Markdown"
+    description = "This card shows a markdown content"
+    icon = "mdi:file-document-edit"
+    grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
+
+    def render(self):
+        markdown = self.settings.get("markdown", "### Markdown")
+        return dmc.Card(
+            dmc.ScrollArea(
+                [
+                    dcc.Markdown(markdown),
+                ],
+            ),
+            style={"height": "100%"},
+            withBorder=True,
+        )
+
+    def render_settings(self):
+        markdown = self.settings.get("markdown", "### Markdown")
+        return dmc.Stack(
+            [
+                dmc.Textarea(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "markdown",
+                    },
+                    label="Markdown",
+                    value=markdown,
+                    autosize=True,
+                ),
+            ]
+        )
+
 
 @callback(
     Output({"type": "card-control", "sub-type": "figure", "id": ALL}, "figure"),
@@ -867,6 +902,7 @@ canvas.card_manager.register_card_class(HeatMap)
 canvas.card_manager.register_card_class(ViolinCard)
 canvas.card_manager.register_card_class(HightlightCard)
 canvas.card_manager.register_card_class(BarChartCard)
+canvas.card_manager.register_card_class(MarkdownCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
