@@ -13,8 +13,6 @@ dependencies = [
 authors = [
     {name = "Najeem Muhammed", email = "najeem@gmail.com"}
 ]
-license = "MIT"
-license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = [
