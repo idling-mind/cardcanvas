@@ -25,8 +25,8 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["cardcanvas"]
-exclude = ["static"]
+include = ["cardcanvas", "cardcanvas.*"]
+exclude = ["static", "tests"]
 
 [tool.setuptools.package-data]
 cardcanvas = ["assets/*"]
