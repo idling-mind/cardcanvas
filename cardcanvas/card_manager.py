@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Type
 
 import dash_mantine_components as dmc
 from dash import dcc, html
@@ -27,7 +27,7 @@ class Card(ABC):
     title: str = "Test Card"
     description: str = "This is a sample card."
     icon = "mdi:file-document-edit"
-    color: str = "#336699"
+    color: str = "blue"
     interval: int | None = None
     grid_settings: dict[str, int] | None = None
 
@@ -164,7 +164,7 @@ class CardManager:
     """Class to manage the cards on the dashboard."""
 
     def __init__(self) -> None:
-        self.card_classes = {}
+        self.card_classes: dict[str, Type[Card]] = {}
 
     def card_objects(
         self,
@@ -192,7 +192,7 @@ class CardManager:
         cards = self.card_objects(card_config, global_settings)
         return [card.render_container() for card in cards.values()]
 
-    def register_card_class(self, card_class: type[Card]) -> None:
+    def register_card_class(self, card_class: Type[Card]) -> None:
         """Register a card class with the card manager.
 
         Args:

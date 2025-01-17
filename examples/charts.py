@@ -755,7 +755,6 @@ class HightlightCard(Card):
         aggregation = self.settings.get("aggregation", "count")
         suffix = self.settings.get("suffix", "Suffix")
         icon = self.settings.get("icon", "mdi:star")
-        print(column_filter)
         return dmc.Stack(
             [
                 dmc.Select(
