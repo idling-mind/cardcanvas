@@ -176,7 +176,7 @@ def generate_filter(column: pd.Series, input_id, default_value=None):
                         [dmc.Checkbox(label=str(x), value=str(x)) for x in sorted_unique]
                     ),
                 ),
-                h=250,
+                style={"maxHeight": "250px", "overflowY": "auto"},
             ),
         ]
     return [
@@ -491,6 +491,206 @@ class ViolinCard(Card):
         )
 
 
+class BarChartCard(Card):
+    title = "Bar Chart"
+    description = "This card shows a bar chart of a given dataset"
+    icon = "mdi:file-document-edit"
+    grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
+
+    def render(self):
+        x = self.settings.get("x", "Pclass")
+        x_filter = self.settings.get("x-filter", None)
+        y = self.settings.get("y", "Age")
+        y_filter = self.settings.get("y-filter", None)
+        color = self.settings.get("color", None)
+        barmode = self.settings.get("barmode", "group")
+        aggregation = self.settings.get("aggregation", "sum")
+        title = self.settings.get("title", "Bar Chart")
+        description = self.settings.get("description", f"Bar chart of {y} by {x}")
+
+        # apply filters
+        filtered_data = data
+        if x_filter is not None:
+            if filtered_data[x].dtype in ["object", "string", "bool", "category"]:
+                filtered_data = filtered_data[filtered_data[x].isin(x_filter)]
+            else:
+                filtered_data = filtered_data[
+                    (filtered_data[x] >= x_filter[0])
+                    & (filtered_data[x] <= x_filter[1])
+                ]
+        if y_filter is not None:
+            if filtered_data[y].dtype in ["object", "string", "bool", "category"]:
+                filtered_data = filtered_data[filtered_data[y].isin(y_filter)]
+            else:
+                filtered_data = filtered_data[
+                    (filtered_data[y] >= y_filter[0])
+                    & (filtered_data[y] <= y_filter[1])
+                ]
+        if color is None:
+            grouped_data = filtered_data.groupby(x)[y].agg(aggregation).reset_index()
+        else:
+            grouped_data = filtered_data.groupby([x, color])[y].agg(aggregation).reset_index()
+
+        fig = px.bar(
+            template="mantine_light",
+            data_frame=grouped_data,
+            x=x,
+            y=y,
+            color=color,
+            barmode=barmode
+        )
+
+        fig.update_layout(margin=dict(l=0, r=0, t=15, b=0))
+        return dmc.Card(
+            [
+                dmc.Text(
+                    title,
+                    fz="30px",
+                    fw=600,
+                    c="blue",
+                ),
+                dmc.Text(
+                    description,
+                    fw=600,
+                    c="dimmed",
+                ),
+                dcc.Graph(
+                    figure=fig,
+                    id={"type": "card-control", "sub-type": "figure", "id": self.id},
+                    className="no-drag",
+                    responsive=True,
+                    style={"height": "100%"},
+                ),
+            ],
+            style={"height": "100%"},
+            withBorder=True,
+            shadow="xs",
+        )
+
+    def render_settings(self):
+        x = self.settings.get("x", "Pclass")
+        x_filter = self.settings.get("x-filter", None)
+        y = self.settings.get("y", "Age")
+        y_filter = self.settings.get("y-filter", None)
+        color = self.settings.get("color", None)
+        barmode = self.settings.get("barmode", "group")
+        aggregation = self.settings.get("aggregation", "sum")
+        title = self.settings.get("title", "Bar Chart")
+        description = self.settings.get("description", "Bar chart description")
+        return dmc.Stack(
+            [
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "x",
+                    },
+                    label="X",
+                    value=x,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column} for column in data.columns
+                    ],
+                ),
+                html.Div(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "container": "x-filter",
+                    },
+                    children=generate_filter(
+                        data[x],
+                        {"type": "card-settings", "id": self.id, "setting": "x"},
+                        default_value=x_filter,
+                    ),
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "y",
+                    },
+                    label="Y",
+                    value=y,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column}
+                        for column in data.columns
+                    ],
+                ),
+                html.Div(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "container": "y-filter",
+                    },
+                    children=generate_filter(
+                        data[y],
+                        {"type": "card-settings", "id": self.id, "setting": "y"},
+                        default_value=y_filter,
+                    ),
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "aggregation",
+                    },
+                    label="Aggregation",
+                    value=aggregation,
+                    data=[
+                        {"label": "Sum", "value": "sum"},
+                        {"label": "Mean", "value": "mean"},
+                        {"label": "Count", "value": "count"},
+                        {"label": "Min", "value": "min"},
+                        {"label": "Max", "value": "max"},
+                    ],
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "color",
+                    },
+                    label="Color",
+                    value=color,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column}
+                        for column in data.columns
+                    ],
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "barmode",
+                    },
+                    label="Bar Mode",
+                    value=barmode,
+                    data=[
+                        {"label": "Grouped", "value": "group"},
+                        {"label": "Stacked", "value": "stack"},
+                    ],
+                ),
+                dmc.TextInput(
+                    id={"type": "card-settings", "id": self.id, "setting": "title"},
+                    label="Title",
+                    value=title,
+                ),
+                dmc.TextInput(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "description",
+                    },
+                    label="Description",
+                    value=description,
+                ),
+            ]
+        )
+
+
 class HightlightCard(Card):
     title = "Highlight"
     description = "This card shows a highlight of a given dataset"
@@ -667,6 +867,7 @@ canvas.card_manager.register_card_class(HistogramCard)
 canvas.card_manager.register_card_class(HeatMap)
 canvas.card_manager.register_card_class(ViolinCard)
 canvas.card_manager.register_card_class(HightlightCard)
+canvas.card_manager.register_card_class(BarChartCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
