@@ -10,6 +10,11 @@ dependencies = [
     "dash-mantine-components>=0.15.1",
     "dash-snap-grid==0.1.0",
 ]
+authors = [
+    {name = "Najeem Muhammed", email = "najeem@gmail.com"}
+]
+license = "MIT"
+license-files = ["LICENSE"]
 
 [dependency-groups]
 dev = [
@@ -19,6 +24,9 @@ dev = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.setuptools.packages.find]
+where = ["cardcanvas"]
 
 [tool.setuptools.package-data]
 cardcanvas = ["assets/*"]
