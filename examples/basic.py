@@ -1,12 +1,3 @@
-![logo.svg](static/logo.svg)
-
-CardCanvas is a library to create runtime-configurable dashboards using
-plotly dash. With a few class definitions, you can let your users build their
-dashboards the way they want.
-
-Here's a simple example code.
-
-```python
 from cardcanvas import CardCanvas, Card
 import dash_mantine_components as dmc
 
@@ -54,4 +45,3 @@ canvas = CardCanvas(settings)
 canvas.card_manager.register_card_class(TextCard)
 
 canvas.app.run_server(debug=True)
-```

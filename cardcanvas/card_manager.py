@@ -2,7 +2,7 @@ from __future__ import annotations
 import logging
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Type
 
 import dash_mantine_components as dmc
 from dash import dcc, html
@@ -27,7 +27,7 @@ class Card(ABC):
     title: str = "Test Card"
     description: str = "This is a sample card."
     icon = "mdi:file-document-edit"
-    color: str = "#336699"
+    color: str = "blue"
     interval: int | None = None
     grid_settings: dict[str, int] | None = None
 
@@ -149,7 +149,7 @@ class Card(ABC):
         Each control in the settings modal should be a dash input field which has
         a value prop. The control should have an id that matches with
         the following template.
-        `id={"type": "card-settings", "id": self.id, "sub-id": "control-id"}`
+        `id={"type": "card-settings", "id": self.id, "setting": "control-id"}`
         Here `control-id` is the id of the control in the settings drawer.
         This control-id will be the key in the settings dictionary that is passed
         to the card's render method.
@@ -164,7 +164,7 @@ class CardManager:
     """Class to manage the cards on the dashboard."""
 
     def __init__(self) -> None:
-        self.card_classes = {}
+        self.card_classes: dict[str, Type[Card]] = {}
 
     def card_objects(
         self,
@@ -192,7 +192,7 @@ class CardManager:
         cards = self.card_objects(card_config, global_settings)
         return [card.render_container() for card in cards.values()]
 
-    def register_card_class(self, card_class: type[Card]) -> None:
+    def register_card_class(self, card_class: Type[Card]) -> None:
         """Register a card class with the card manager.
 
         Args:

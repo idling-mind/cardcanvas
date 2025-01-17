@@ -22,8 +22,9 @@ from dash import (
 from dash_snap_grid import ResponsiveGrid
 from dash_iconify import DashIconify
 
-from . import ui
+from . import ui, helpers
 from .card_manager import CardManager
+from .settings import DEFAULT_THEME
 
 _dash_renderer._set_react_version("18.2.0")
 dmc.add_figure_templates()
@@ -50,10 +51,12 @@ class CardCanvas:
         title = settings.get("title", "Card Canvas")
         subtitle = settings.get("subtitle", None)
         title_component = settings.get("title_component", None)
+        footer_component = settings.get("footer_component", None)
         start_config = settings.get("start_config", {})
         start_card_config = start_config.get("card_config", {})
-        start_card_layout = start_config.get("card_layout", {"lg": []})
+        start_card_layout = start_config.get("card_layouts", {"lg": []})
         logo = settings.get("logo", None)
+        theme = settings.get("theme", DEFAULT_THEME)
         app = Dash(
             __name__,
             **self.dash_options,
@@ -64,7 +67,9 @@ class CardCanvas:
 
         title_layout = dmc.Group(
             [
-                title_component if title_component else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
+                title_component
+                if title_component
+                else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
                 dmc.ActionIcon(
                     id="open-main-menu",
                     children=DashIconify(icon="mdi:menu"),
@@ -72,14 +77,12 @@ class CardCanvas:
                 ),
             ],
             justify="space-between",
-            p="xs"
+            p="xs",
         )
 
         main_buttons = dmc.Collapse(
             id="main-menu-collapse",
-            children=[
-                ui.main_buttons()
-            ],
+            children=[ui.main_buttons()],
             opened=True,
             style={"position": "sticky", "top": 0, "zIndex": 10},
         )
@@ -91,6 +94,7 @@ class CardCanvas:
                 main_buttons,
                 ResponsiveGrid(
                     id="card-grid",
+                    children=[],
                     cols={"lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
                     rowHeight=settings.get("grid_row_height", 50),
                     compactType=settings.get("grid_compact_type", None),
@@ -104,9 +108,23 @@ class CardCanvas:
 
         invisible_controls = html.Div(
             children=[
-                dcc.Store(id="main-store", storage_type="local"),
-                dcc.Store(id="card-config-store", storage_type="memory"),
-                dcc.Store(id="card-layout-store", storage_type="memory"),
+                dcc.Store(id="cardcanvas-main-store", storage_type="local"),
+                dcc.Store(
+                    id="cardcanvas-config-store",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-layout-store",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-config-store-current",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-layout-store-current",
+                    storage_type="memory",
+                ),
                 dcc.Download(id="download-layout-data"),
                 dmc.NotificationProvider(),
                 html.Div(id="notification-container"),
@@ -119,54 +137,68 @@ class CardCanvas:
             closeOnClickOutside=False,
             withOverlay=False,
             position="right",
+            lockScroll=False,
         )
+
+        main_components = [stage_layout, settings_layout, invisible_controls]
+        if footer_component:
+            main_components.append(footer_component)
 
         app.layout = dmc.MantineProvider(
-            [stage_layout, settings_layout, invisible_controls]
+            children=main_components,
+            theme=theme,
+            id="mantine-provider",
+            forceColorScheme="light",
         )
 
         @app.callback(
-            Output("main-store", "data"),
+            Output("cardcanvas-config-store", "data"),
+            Output("cardcanvas-layout-store", "data"),
             Input(app.layout, "layout"),
-            State("main-store", "data"),
+            State("cardcanvas-main-store", "data"),
         )
-        def initial_load(_app_layout, main_store):
-            if main_store and isinstance(main_store, dict):
-                return no_update
-            return start_config
+        def load_layout(layout, main_store):
+            if not main_store:
+                main_store = {}
 
-        @app.callback(
-            Output("card-config-store", "data"),
-            Output("card-layout-store", "data"),
-            Input("main-store", "data"),
-            State("card-config-store", "data"),
-            State("card-layout-store", "data"),
-            prevent_initial_call=True,
-        )
-        def load_config(main_store, card_config, card_layouts):
-            if not main_store or not isinstance(main_store, dict):
-                return no_update, no_update
-            return (
-                main_store.get("card_config", start_card_config),
-                main_store.get("card_layouts", start_card_layout),
-            )
+            card_config = main_store.get("card_config", start_card_config)
+            card_layouts = main_store.get("card_layouts", start_card_layout)
+            return card_config, card_layouts
 
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
-            Input("card-config-store", "data"),
-            State("card-layout-store", "data"),
+            Output("cardcanvas-config-store-current", "data"),
+            Output("cardcanvas-layout-store-current", "data"),
+            Input("cardcanvas-config-store", "data"),
+            Input("cardcanvas-layout-store", "data"),
+            State("cardcanvas-config-store-current", "data"),
+            State("cardcanvas-layout-store-current", "data"),
+            State("card-grid", "layouts"),
+            prevent_initial_call=True,
         )
-        def load_cards(card_config, card_layouts):
-            return self.card_manager.render(card_config, {}), card_layouts
+        def load_cards(
+            card_config, card_layout_store, current_config, current_layout, layout
+        ):
+            if helpers.compare_dicts(card_config, current_config):
+                new_children = no_update
+            else:
+                new_children = self.card_manager.render(card_config)
+            if helpers.compare_dicts(
+                card_layout_store, current_layout
+            ) and helpers.compare_dicts(layout, current_layout):
+                new_layout = no_update
+            else:
+                new_layout = card_layout_store
+            return new_children, new_layout, card_config, card_layout_store
 
         @app.callback(
-            Output("main-store", "data", allow_duplicate=True),
-            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-main-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Output("notification-container", "children"),
             Input("save-layout", "n_clicks"),
             State("card-grid", "layouts"),
-            State("card-config-store", "data"),
+            State("cardcanvas-config-store", "data"),
             prevent_initial_call=True,
         )
         def save_reset_cards(nclicks, card_layouts, card_config):
@@ -177,6 +209,8 @@ class CardCanvas:
                     "card_layouts": card_layouts,
                     "card_config": card_config,
                 },
+                # This is required since there may be changes in the layout which
+                # are not reflected in the cardcanvas_layout_store
                 card_layouts,
                 dmc.Notification(
                     title="Layout Saved",
@@ -187,11 +221,11 @@ class CardCanvas:
             )
 
         @app.callback(
-            Output("card-layout-store", "data", allow_duplicate=True),
-            Output("card-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("notification-container", "children", allow_duplicate=True),
-            Input("reset-layout", "n_clicks"),
-            State("main-store", "data"),
+            Input("restore-layout", "n_clicks"),
+            State("cardcanvas-main-store", "data"),
             prevent_initial_call=True,
         )
         def reset_layouts(nclicks, main_store):
@@ -257,11 +291,11 @@ class CardCanvas:
             return True, children
 
         @app.callback(
-            Output("card-config-store", "data", allow_duplicate=True),
-            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Input("card-grid", "droppedItem"),
-            State("card-config-store", "data"),
-            State("card-layout-store", "data"),
+            State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
             prevent_initial_call=True,
         )
         def add_new_card(dropped_item, card_config, card_layouts):
@@ -292,11 +326,11 @@ class CardCanvas:
             return card_config, card_layouts
 
         @app.callback(
-            Output("card-config-store", "data", allow_duplicate=True),
-            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Input({"type": "card-duplicate", "index": ALL}, "n_clicks"),
-            State("card-config-store", "data"),
-            State("card-layout-store", "data"),
+            State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
             State("card-grid", "layout"),
             prevent_initial_call=True,
         )
@@ -321,27 +355,33 @@ class CardCanvas:
             return card_config, card_layouts
 
         @app.callback(
-            Output("card-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Input({"type": "card-delete", "index": ALL}, "n_clicks"),
-            State("card-config-store", "data"),
+            State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
             prevent_initial_call=True,
         )
-        def delete_card(nclicks, card_config):
+        def delete_card(nclicks, card_config, card_layouts):
             if not card_config:
-                return no_update
+                return no_update, no_update
             if not any(nclicks) or not ctx.triggered:
-                return no_update
+                return no_update, no_update
             if not ctx.triggered_id or not isinstance(ctx.triggered_id, dict):
-                return no_update
+                return no_update, no_update
             card_id = ctx.triggered_id.get("index")
             card_config.pop(card_id, None)
-            return card_config
+            for key in card_layouts.keys():
+                card_layouts[key] = [
+                    item for item in card_layouts[key] if item["i"] != card_id
+                ]
+            return card_config, card_layouts
 
         @app.callback(
             Output("settings-layout", "children", allow_duplicate=True),
             Output("settings-layout", "opened", allow_duplicate=True),
             Input({"type": "card-settings", "index": ALL}, "n_clicks"),
-            State("card-config-store", "data"),
+            State("cardcanvas-config-store", "data"),
             prevent_initial_call=True,
         )
         def open_card_settings(nclicks, card_config):
@@ -365,12 +405,12 @@ class CardCanvas:
             ), True
 
         @app.callback(
-            Output("card-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("settings-layout", "opened", allow_duplicate=True),
             Input("settings_ok", "n_clicks"),
-            State({"type": "card-settings", "id": ALL, "sub-id": ALL}, "value"),
-            State({"type": "card-settings", "id": ALL, "sub-id": ALL}, "id"),
-            State("card-config-store", "data"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "value"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "id"),
+            State("cardcanvas-config-store", "data"),
             prevent_initial_call=True,
         )
         def save_card_settings(nclicks, values, ids, card_config):
@@ -378,7 +418,7 @@ class CardCanvas:
                 return no_update, no_update
             for idx, val in zip(ids, values):
                 card_id = idx.get("id")
-                sub_id = idx.get("sub-id")
+                sub_id = idx.get("setting")
                 if card_id not in card_config:
                     continue
                 card_config[card_id]["settings"][sub_id] = val
@@ -402,7 +442,7 @@ class CardCanvas:
             Output({"type": "card-interval", "index": MATCH}, "interval"),
             Input({"type": "card-interval", "index": MATCH}, "n_intervals"),
             State({"type": "card-interval", "index": MATCH}, "interval"),
-            State("card-config-store", "data"),
+            State("cardcanvas-config-store", "data"),
         )
         def update_card(n_intervals, interval, cards_config):
             if not ctx.triggered_id or not cards_config:
@@ -417,7 +457,7 @@ class CardCanvas:
         @app.callback(
             Output("download-layout-data", "data"),
             Input("download-layout", "n_clicks"),
-            State("main-store", "data"),
+            State("cardcanvas-main-store", "data"),
             prevent_initial_call=True,
         )
         def download_layout(n_clicks, main_store):
@@ -428,9 +468,9 @@ class CardCanvas:
             )
 
         @app.callback(
-            Output("main-store", "data", allow_duplicate=True),
-            Output("card-config-store", "data", allow_duplicate=True),
-            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-main-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Input("upload-layout", "contents"),
             prevent_initial_call=True,
         )
@@ -452,8 +492,8 @@ class CardCanvas:
             return {}
 
         @app.callback(
-            Output("card-config-store", "data", allow_duplicate=True),
-            Output("card-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Output("notification-container", "children", allow_duplicate=True),
             Input("clear-layout", "n_clicks"),
             prevent_initial_call=True,
@@ -477,6 +517,31 @@ class CardCanvas:
             )
 
         @app.callback(
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
+            Output("notification-container", "children", allow_duplicate=True),
+            Input("reset-layout", "n_clicks"),
+            prevent_initial_call=True,
+        )
+        def reset_layout(n_clicks):
+            if not n_clicks:
+                return no_update, no_update, no_update
+            return (
+                start_card_config,
+                start_card_layout,
+                dmc.Notification(
+                    title="Layout Reset",
+                    message=(
+                        "The layout has been reset to default layout."
+                        " Click on save to save the changes."
+                        " Click on restore to restore the layout.",
+                    ),
+                    color="red",
+                    action="show",
+                ),
+            )
+
+        @app.callback(
             Output("main-menu-collapse", "opened"),
             Input("open-main-menu", "n_clicks"),
             State("main-menu-collapse", "opened"),
@@ -484,5 +549,14 @@ class CardCanvas:
         )
         def open_main_menu(n_clicks, status):
             return not status
+
+        @app.callback(
+            Output("mantine-provider", "forceColorScheme"),
+            Input("color-scheme-toggle", "n_clicks"),
+            State("mantine-provider", "forceColorScheme"),
+            prevent_initial_call=True,
+        )
+        def switch_theme(_, theme):
+            return "dark" if theme == "light" else "light"
 
         return app

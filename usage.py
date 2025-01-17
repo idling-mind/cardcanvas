@@ -32,42 +32,48 @@ swatches = [
 
 
 class TimeCard(Card):
-    title = "Sample Card"
-    description = "This is a sample card."
-    icon = "mdi:file-document-edit"
-    color = "#336699"
+    title = "Display Time"
+    description = "Display current time on the card and update every minute"
+    icon = "mdi:clock"
+    color = "blue"
     interval = 1000 * 60
     grid_settings = {"w": 6, "minW": 6}
 
     def render(self):
         return dmc.Card(
             dmc.Title(
-                f"Now time is: {datetime.datetime.now()}",
-                c=self.settings.get("text-color", "grey"),
+                f"Now time is: {datetime.datetime.now().strftime('%H:%M:%S')}",
+                c=self.settings.get("text-color", "white"),
                 order=2,
             ),
             style={
                 "height": "100%",
                 "width": "100%",
-                "background": self.settings.get("background-color", "grey"),
+                "background": self.settings.get("background-color", "#336699"),
             },
         )
 
     def render_settings(self):
         return dmc.Stack(
             [
-                dmc.ColorPicker(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "text-color"},
-                    value=self.settings.get("text-color", "grey"),
-                    swatches=swatches,
-                ),
+                dmc.Text("Text Color"),
                 dmc.ColorPicker(
                     id={
                         "type": "card-settings",
                         "id": self.id,
-                        "sub-id": "background-color",
+                        "setting": "text-color",
                     },
-                    value=self.settings.get("background-color", "grey"),
+                    value=self.settings.get("text-color", "white"),
+                    swatches=swatches,
+                ),
+                dmc.Text("Background Color"),
+                dmc.ColorPicker(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "background-color",
+                    },
+                    value=self.settings.get("background-color", "#336699"),
                     swatches=swatches,
                 ),
             ]
@@ -77,20 +83,21 @@ class TimeCard(Card):
 class Options(Card):
     title = "List of options"
     description = "Select from a list of options"
-    icon = "mdi:file-document-edit"
-    color = "#336699"
+    icon = "mdi:form-select"
+    color = "green"
 
     def render(self):
-        return html.Div(
+        return dmc.Card(
             dmc.Text(
                 f"You have selected {','.join(self.settings.get('option', []))}",
             ),
             style={"height": "100%", "width": "100%"},
+            withBorder=True,
         )
 
     def render_settings(self):
         return dmc.MultiSelect(
-            id={"type": "card-settings", "id": self.id, "sub-id": "option"},
+            id={"type": "card-settings", "id": self.id, "setting": "option"},
             placeholder="Select an option",
             label="Select an option",
             value=self.settings.get("option", []),
@@ -105,11 +112,12 @@ class Options(Card):
 class ColorCard(Card):
     title = "Color Card"
     description = "This card just shows a coloured background"
-    icon = "mdi:file-document-edit"
+    icon = "mdi:color"
+    color = "orange"
 
     def render(self):
         return dmc.Paper(
-            [dmc.Card(bg=self.settings.get("color", "#cccccc"), h="100%")],
+            [dmc.Card(bg=self.settings.get("color", "orange"), h="100%")],
             h="100%",
         )
 
@@ -117,7 +125,7 @@ class ColorCard(Card):
         return dmc.Stack(
             [
                 dmc.ColorPicker(
-                    id={"type": "card-settings", "id": self.id, "sub-id": "color"},
+                    id={"type": "card-settings", "id": self.id, "setting": "color"},
                     value=self.settings.get("color", "grey"),
                     swatches=swatches,
                 ),
