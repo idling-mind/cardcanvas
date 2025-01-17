@@ -10,6 +10,12 @@ CardCanvas is built using [plotly Dash](https://dash.plotly.com/). The UI is bui
 [dash-mantine-components](https://www.dash-mantine-components.com/).
 The drag and drop is built using [dash-snap-grid](https://github.com/idling-mind/dash_snap_grid).
 
+## Installation
+
+```
+pip install cardcanvas
+```
+
 
 Here's a simple example code.
 
