@@ -17,6 +17,8 @@ dependencies = [
 authors = [
     {name = "Najeem Muhammed", email = "najeem@gmail.com"}
 ]
+license-files = ["LICENSE"]
+dynamic = ["license"]
 
 [dependency-groups]
 dev = [
