@@ -1,5 +1,6 @@
 from __future__ import annotations
 import logging
+import traceback
 
 from abc import ABC, abstractmethod
 from typing import Any, Type
@@ -30,6 +31,7 @@ class Card(ABC):
     color: str = "blue"
     interval: int | None = None
     grid_settings: dict[str, int] | None = None
+    debug = False  # Set this to True to display full error traceback on card
 
     def __init__(
         self,
@@ -109,11 +111,27 @@ class Card(ABC):
         try:
             card_content = self.render()
         except Exception as e:
-            logging.error(f"Error rendering card: {str(e)}")
-            card_content = html.Div(
-                html.Pre(f"Error rendering card: {str(e)}"),
-                style={"color": "red", "overflow": "auto"},
-            )
+            logging.error(f"Error rendering card {self.id}: {str(e)}")
+            logging.error(traceback.format_exc())
+            if self.debug:
+                card_content = html.Div(
+                    html.Pre(
+                        f"Error rendering card: {str(e)}\n{traceback.format_exc()}",
+                    ),
+                    style={
+                        "color": "red",
+                        "width": "100%",
+                        "height": "100%",
+                        "overflow": "auto",
+                    },
+                )
+            else:
+                card_content = dmc.Alert(
+                    dmc.Text(f"Error rendering card: {str(e)}", ff="Consolas"),
+                    color="red",
+                    title="Error",
+                    h="100%",
+                )
         children: list[Any] = [
             dcc.Loading(
                 html.Div(
