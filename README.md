@@ -100,6 +100,36 @@ called, you can access these settings using `self.setting`.
 setting as the attribute. When the user updates the setting, the render method
 will be called and it can pick up the new values of the settings.
 
+## Card class
+
+To create a new card type, you need to create a class inherit from `cardcanvas.Card`.
+
+It should have few class attributes and also a `render()` method.
+
+The following are the class attributes:
+
+- `title`: The title of the card.
+- `description`: A short description of the card.
+- `icon`: The icon of the card. You can use the icons supported by [Dash Iconify](https://www.dash-mantine-components.com/dash-iconify)
+- `color`: The color of the icon in card gallery. (default: "blue")
+
+(The above attributes are used in the card gallery; for the user to drag and drop)
+
+- `interval`: the interval at which the card will be re-rendered (in milliseconds). If not set, the card will not be auto-refreshed.
+- `debug`: If true, the card will show the full traceback of errors (if any) in the card itself. (default: False)
+- `grid_settings`: A dictionary with the following keys:
+    - `w`: The width of the card in the grid.
+    - `h`: The height of the card in the grid.
+    - `minW`: The minimum width of the card in the grid.
+    - `minH`: The minimum height of the card in the grid.
+    - `maxW`: The maximum width of the card in the grid.
+    - `maxH`: The maximum height of the card in the grid.
+    - `static` (bool): If true, the card cannot be moved or resized. (default: False)
+    - `isDraggable` (bool): If false, the card cannot be dragged. (default: True)
+    - `isResizable` (bool): If false, the card cannot be resized. (default: True)
+    - `isBounded` (bool): If true, the card will be bounded by the grid. (default: False)
+
+
 Have a look at `usage.py` or the folder `examples` to see more examples.
 
 The animation shown above can be found in examples/charts.py
