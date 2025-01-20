@@ -41,6 +41,7 @@ class HistogramCard(Card):
     description = "This card shows a histogram of a given dataset"
     icon = "mdi:file-document-edit"
     grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
+    debug = True
 
     def render(self):
         column = self.settings.get("column", "Age")

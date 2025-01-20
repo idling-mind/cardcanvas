@@ -177,12 +177,47 @@ class Card(ABC):
         """
         return dmc.Text("Settings not implemented yet.")
 
+class GlobalSettings(ABC):
+    """Class to represent the global settings for the dashboard. This is an abstract class.
+
+    This is the parent class for all global settings on the dashboard. The following methods
+    must be implemented in the child classes:
+    - render: Render the global settings.
+
+    The following attributes should be set in the child classes. These are
+    used to display the global settings on in the card gallery:
+    - title: The title of the global settings.
+    - description: The description of the global settings.
+    - icon: The icon for the global settings.
+    """
+
+    title: str = "Global Settings"
+    description: str = "These settings apply to all cards on the dashboard."
+    icon = "mdi:cog"
+
+    def __init__(self, settings: dict[str, str] | None = None) -> None:
+        """Initialize the global settings.
+
+        Args:
+            global_settings: The global settings for the dashboard.
+        """
+        self.settings: dict[str, str] = settings or {}
+
+    @abstractmethod
+    def render_settings(self):
+        """Render the global settings.
+
+        This method should return a Dash component that represents the global settings in
+        the dashboard.
+        """
+        pass
 
 class CardManager:
     """Class to manage the cards on the dashboard."""
 
     def __init__(self) -> None:
         self.card_classes: dict[str, Type[Card]] = {}
+        self.global_settings_class: Type[GlobalSettings] | None = None
 
     def card_objects(
         self,
@@ -206,8 +241,11 @@ class CardManager:
         self,
         card_config: dict[str, dict[str, Any]],
         global_settings: dict[str, str] | None = None,
+        debug=False,
     ) -> list[html.Div]:
         cards = self.card_objects(card_config, global_settings)
+        for card in cards.values():
+            card.debug = debug
         return [card.render_container() for card in cards.values()]
 
     def register_card_class(self, card_class: Type[Card]) -> None:
@@ -217,3 +255,13 @@ class CardManager:
             card_class: The class of the card to be registered.
         """
         self.card_classes[card_class.__name__] = card_class
+
+    def register_global_settings_class(
+        self, global_settings_class: Type[GlobalSettings]
+    ) -> None:
+        """Register a global settings class with the card manager.
+
+        Args:
+            global_settings_class: The class of the global settings to be registered.
+        """
+        self.global_settings_class = global_settings_class
