@@ -575,14 +575,16 @@ class CardCanvas:
         @app.callback(
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("cardcanvas-layout-store", "data", allow_duplicate=True),
+            Output("cardcanvas-global-store", "data", allow_duplicate=True),
             Output("notification-container", "children", allow_duplicate=True),
             Input("clear-layout", "n_clicks"),
             prevent_initial_call=True,
         )
         def clear_layout(n_clicks):
             if not n_clicks:
-                return no_update, no_update, no_update
+                return no_update, no_update, no_update, no_update
             return (
+                {},
                 {},
                 {},
                 dmc.Notification(
