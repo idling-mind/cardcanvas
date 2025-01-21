@@ -8,13 +8,15 @@ class Settings(GlobalSettings):
     def render_settings(self):
         return dmc.Stack(
             [
-                dmc.Text("Theme"),
+                dmc.Text("Some setting"),
                 dmc.Select(
-                    id={"type": "global-settings", "setting": "theme"},
-                    value=self.settings.get("theme", "light"),
+                    id={"type": "global-settings", "setting": "global_setting_1"},
+                    value=self.settings.get("global_setting_1", "Option 1"),
                     data=[
-                        {"label": "Light", "value": "light"},
-                        {"label": "Dark", "value": "dark"},
+                        {"label": "Option 1", "value": "Option 1"},
+                        {"label": "Option 2", "value": "Option 2"},
+                        {"label": "Option 3", "value": "Option 3"},
+                        {"label": "Option 4", "value": "Option 4"},
                     ],
                 ),
             ]
@@ -65,7 +67,6 @@ class TimeCard(Card):
                     c=self.settings.get("text-color", "white"),
                     order=2,
                 ),
-                dmc.JsonInput(value=json.dumps(self.global_settings)),
             ],
             style={
                 "height": "100%",
@@ -100,6 +101,36 @@ class TimeCard(Card):
             ]
         )
 
+class GlobalSettingsCard(Card):
+    title = "Global Settings"
+    description = "Display the global settings"
+    icon = "mdi:settings"
+    color = "purple"
+
+    def render(self):
+        return dmc.Card(
+            [
+                dmc.JsonInput(
+                    value=json.dumps(self.global_settings, indent=2),
+                    minRows=15,
+                    maxRows=15,
+                    style={"width": "100%", "height": "100%"},
+                    resize="vertical",
+                    className="no-drag",
+                ),
+            ],
+            h="100%",
+            withBorder=True,
+        )
+
+    def render_settings(self):
+        return dmc.Stack(
+            [
+                dmc.Text(
+                    "This card does not have any settings, it just displays the global settings"
+                ),
+            ]
+        )
 
 class Options(Card):
     title = "List of options"
@@ -113,7 +144,7 @@ class Options(Card):
                 dmc.Text(
                     (
                         f"You have selected {','.join(self.settings.get('option', []))}"
-                        f" and the global theme is {self.global_settings.get('theme', 'not set')}"
+                        f" and the global_setting_1 is {self.global_settings.get('global_setting_1', 'not set')}"
                     ),
                 ),
             ],
@@ -165,6 +196,7 @@ class ColorCard(Card):
 
 canvas = CardCanvas(settings)
 canvas.card_manager.register_card_class(TimeCard)
+canvas.card_manager.register_card_class(GlobalSettingsCard)
 canvas.card_manager.register_card_class(ColorCard)
 canvas.card_manager.register_card_class(Options)
 canvas.card_manager.register_global_settings_class(Settings)
