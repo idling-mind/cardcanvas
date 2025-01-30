@@ -29,12 +29,9 @@ settings = {
 }
 
 data = pd.read_csv(
-    "https://raw.githubusercontent.com/datasciencedojo/datasets/refs/heads/master/titanic.csv"
+    "https://raw.githubusercontent.com/plotly/Figure-Friday/refs/heads/main/2025/week-4/Post45_NEAData_Final.csv"
 )
-data["Survived"] = data["Survived"].apply(lambda x: "Survived" if x == 1 else "Died")
-data["Pclass"] = data["Pclass"].apply(lambda x: f"Class {x}")
-data["Embarked"] = data["Embarked"].map({"C": "Cherbourg", "Q": "Queenstown", "S": "Southampton"})
-data["Sex"] = data["Sex"].str.title()
+data["Age"] = data["nea_grant_year"] - data["birth_year"]
 
 class HistogramCard(Card):
     title = "Histogram"
@@ -44,7 +41,7 @@ class HistogramCard(Card):
     debug = True
 
     def render(self):
-        column = self.settings.get("column", "Age")
+        column = self.settings.get("column", None)
         color = self.settings.get("color", None)
         nbins = self.settings.get("bins", 20)
         title = self.settings.get("title", "Histogram")
@@ -82,7 +79,7 @@ class HistogramCard(Card):
         )
 
     def render_settings(self):
-        column = self.settings.get("column", "Age")
+        column = self.settings.get("column", None)
         color = self.settings.get("color", None)
         nbins = self.settings.get("bins", 20)
         title = self.settings.get("title", "Histogram")
@@ -203,9 +200,9 @@ class HeatMap(Card):
     grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
 
     def render(self):
-        x = self.settings.get("x", "Age")
+        x = self.settings.get("x", None)
         x_filter = self.settings.get("x-filter", None)
-        y = self.settings.get("y", "Fare")
+        y = self.settings.get("y", None)
         y_filter = self.settings.get("y-filter", None)
         nbinsx = self.settings.get("nbinsx", 20)
         nbinsy = self.settings.get("nbinsy", 20)
@@ -262,14 +259,29 @@ class HeatMap(Card):
         )
 
     def render_settings(self):
-        x = self.settings.get("x", "Age")
-        y = self.settings.get("y", "Fare")
+        x = self.settings.get("x", None)
+        y = self.settings.get("y", None)
         x_filter = self.settings.get("x-filter", None)
         y_filter = self.settings.get("y-filter", None)
         nbinsx = self.settings.get("nbinsx", 20)
         nbinsy = self.settings.get("nbinsy", 20)
         title = self.settings.get("title", "Heatmap")
         description = self.settings.get("description", "Heatmap description")
+
+        x_filter_children = None
+        if x is not None:
+            x_filter_children = generate_filter(
+                data[x],
+                {"type": "card-settings", "id": self.id, "setting": "x"},
+                default_value=x_filter,
+            )
+        y_filter_children = None
+        if y is not None:
+            y_filter_children = generate_filter(
+                data[y],
+                {"type": "card-settings", "id": self.id, "setting": "y"},
+                default_value=y_filter,
+            )
 
         return dmc.Stack(
             [
@@ -293,11 +305,7 @@ class HeatMap(Card):
                         "id": self.id,
                         "container": "x-filter",
                     },
-                    children=generate_filter(
-                        data[x],
-                        {"type": "card-settings", "id": self.id, "setting": "x"},
-                        default_value=x_filter,
-                    ),
+                    children=x_filter_children,
                 ),
                 dmc.Select(
                     id={
@@ -316,11 +324,7 @@ class HeatMap(Card):
                         "id": self.id,
                         "container": "y-filter",
                     },
-                    children=generate_filter(
-                        data[y],
-                        {"type": "card-settings", "id": self.id, "setting": "y"},
-                        default_value=y_filter,
-                    ),
+                    children=y_filter_children,
                 ),
                 dmc.NumberInput(
                     id={
@@ -368,6 +372,8 @@ class HeatMap(Card):
     def update_filter_x(value):
         """If the column is categorical, show a dropdown to filter the data
         else if data is numeric, show a slider to filter the data"""
+        if value is None:
+            return no_update
         column = data[value]
         # get the input id
         ctx = callback_context
@@ -383,6 +389,8 @@ class HeatMap(Card):
         Input({"type": "card-settings", "id": MATCH, "setting": "y"}, "value"),
     )
     def update_filter_y(value):
+        if value is None:
+            return no_update
         column = data[value]
         ctx = callback_context
         if not ctx.triggered_id:
@@ -398,8 +406,8 @@ class ViolinCard(Card):
     grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
 
     def render(self):
-        x = self.settings.get("x", "Pclass")
-        y = self.settings.get("y", "Age")
+        x = self.settings.get("x", None)
+        y = self.settings.get("y", None)
         title = self.settings.get("title", "Violin plot")
         description = self.settings.get("description", f"Violin plot of {y} by {x}")
         fig = px.violin(
@@ -440,8 +448,8 @@ class ViolinCard(Card):
         )
 
     def render_settings(self):
-        x = self.settings.get("x", "Pclass")
-        y = self.settings.get("y", "Age")
+        x = self.settings.get("x", None)
+        y = self.settings.get("y", None)
         title = self.settings.get("title", "Violin plot")
         description = self.settings.get("description", "Violin plot description")
         return dmc.Stack(
@@ -499,13 +507,13 @@ class BarChartCard(Card):
     grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
 
     def render(self):
-        x = self.settings.get("x", "Pclass")
+        x = self.settings.get("x", None)
         x_filter = self.settings.get("x-filter", None)
-        y = self.settings.get("y", "Age")
+        y = self.settings.get("y", None)
         y_filter = self.settings.get("y-filter", None)
         color = self.settings.get("color", None)
         barmode = self.settings.get("barmode", "group")
-        aggregation = self.settings.get("aggregation", "sum")
+        aggregation = self.settings.get("aggregation", "count")
         title = self.settings.get("title", "Bar Chart")
         description = self.settings.get("description", f"Bar chart of {y} by {x}")
 
@@ -569,15 +577,31 @@ class BarChartCard(Card):
         )
 
     def render_settings(self):
-        x = self.settings.get("x", "Pclass")
+        x = self.settings.get("x", None)
         x_filter = self.settings.get("x-filter", None)
-        y = self.settings.get("y", "Age")
+        y = self.settings.get("y", None)
         y_filter = self.settings.get("y-filter", None)
         color = self.settings.get("color", None)
         barmode = self.settings.get("barmode", "group")
         aggregation = self.settings.get("aggregation", "sum")
         title = self.settings.get("title", "Bar Chart")
         description = self.settings.get("description", "Bar chart description")
+
+        x_filter_children = None
+        if x is not None:
+            x_filter_children = generate_filter(
+                data[x],
+                {"type": "card-settings", "id": self.id, "setting": "x"},
+                default_value=x_filter,
+            )
+
+        y_filter_children = None
+        if y is not None:
+            y_filter_children = generate_filter(
+                data[y],
+                {"type": "card-settings", "id": self.id, "setting": "y"},
+                default_value=y_filter,
+            )
         return dmc.Stack(
             [
                 dmc.Select(
@@ -599,11 +623,7 @@ class BarChartCard(Card):
                         "id": self.id,
                         "container": "x-filter",
                     },
-                    children=generate_filter(
-                        data[x],
-                        {"type": "card-settings", "id": self.id, "setting": "x"},
-                        default_value=x_filter,
-                    ),
+                    children=x_filter_children,
                 ),
                 dmc.Select(
                     id={
@@ -615,8 +635,7 @@ class BarChartCard(Card):
                     value=y,
                     searchable=True,
                     data=[
-                        {"label": column, "value": column}
-                        for column in data.columns
+                        {"label": column, "value": column} for column in data.columns
                     ],
                 ),
                 html.Div(
@@ -625,11 +644,7 @@ class BarChartCard(Card):
                         "id": self.id,
                         "container": "y-filter",
                     },
-                    children=generate_filter(
-                        data[y],
-                        {"type": "card-settings", "id": self.id, "setting": "y"},
-                        default_value=y_filter,
-                    ),
+                    children=y_filter_children,
                 ),
                 dmc.Select(
                     id={
@@ -657,8 +672,7 @@ class BarChartCard(Card):
                     value=color,
                     searchable=True,
                     data=[
-                        {"label": column, "value": column}
-                        for column in data.columns
+                        {"label": column, "value": column} for column in data.columns
                     ],
                 ),
                 dmc.Select(
@@ -692,13 +706,108 @@ class BarChartCard(Card):
         )
 
 
+class TopNBarChartCard(Card):
+    title = "Top Bar Chart"
+    description = "Show the top n entries for a given column"
+    icon = "mdi:file-document-edit"
+    grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
+
+    def render(self):
+        column = self.settings.get("column", None)
+        n = self.settings.get("n", 10)
+        title = self.settings.get("title", "Top N Bar Chart")
+        description = self.settings.get("description", f"Top {n} entries of {column}")
+
+        top_n = data[column].value_counts().head(n).reset_index()
+        top_n.columns = [column, "count"]
+        fig = px.bar(
+            top_n,
+            x=column,
+            y="count",
+            template="mantine_light",
+        )
+        fig.update_layout(margin=dict(l=0, r=0, t=15, b=0))
+        return dmc.Card(
+            [
+                dmc.Text(
+                    title,
+                    fz="30px",
+                    fw=600,
+                    c="blue",
+                ),
+                dmc.Text(
+                    description,
+                    fw=600,
+                    c="dimmed",
+                ),
+                dcc.Graph(
+                    figure=fig,
+                    id={"type": "card-control", "sub-type": "figure", "id": self.id},
+                    className="no-drag",
+                    responsive=True,
+                    style={"height": "100%"},
+                ),
+            ],
+            style={"height": "100%"},
+            withBorder=True,
+            shadow="xs",
+        )
+
+    def render_settings(self):
+        column = self.settings.get("column", None)
+        n = self.settings.get("n", 10)
+        title = self.settings.get("title", "Top N Bar Chart")
+        description = self.settings.get("description", "Top N Bar Chart description")
+        return dmc.Stack(
+            [
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "column",
+                    },
+                    label="Column",
+                    value=column,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column} for column in data.columns
+                    ],
+                ),
+                dmc.NumberInput(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "n",
+                    },
+                    label="Number of entries",
+                    value=n,
+                    min=1,
+                ),
+                dmc.TextInput(
+                    id={"type": "card-settings", "id": self.id, "setting": "title"},
+                    label="Title",
+                    value=title,
+                ),
+                dmc.TextInput(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "description",
+                    },
+                    label="Description",
+                    value=description,
+                ),
+            ]
+        )
+
+
 class HightlightCard(Card):
     title = "Highlight"
     description = "This card shows a highlight of a given dataset"
     icon = "mdi:file-document-edit"
 
     def render(self):
-        column = self.settings.get("column", "Age")
+        column = self.settings.get("column", None)
         aggregation = self.settings.get("aggregation", "count")
         filter_value = self.settings.get("column-filter", None)
         filtered_data = data
@@ -751,11 +860,19 @@ class HightlightCard(Card):
         )
 
     def render_settings(self):
-        column = self.settings.get("column", "Age")
+        column = self.settings.get("column", None)
         column_filter = self.settings.get("column-filter", None)
         aggregation = self.settings.get("aggregation", "count")
         suffix = self.settings.get("suffix", "Suffix")
         icon = self.settings.get("icon", "mdi:star")
+
+        filter_children = None
+        if column is not None:
+            filter_children = generate_filter(
+                data[column],
+                {"type": "card-settings", "id": self.id, "setting": "column"},
+                default_value=column_filter,
+            )
         return dmc.Stack(
             [
                 dmc.Select(
@@ -777,11 +894,7 @@ class HightlightCard(Card):
                         "id": self.id,
                         "container": "column-filter",
                     },
-                    children=generate_filter(
-                        data[column],
-                        {"type": "card-settings", "id": self.id, "setting": "column"},
-                        default_value=column_filter,
-                    ),
+                    children=filter_children,
                 ),
                 dmc.Select(
                     id={
@@ -794,6 +907,7 @@ class HightlightCard(Card):
                     searchable=True,
                     data=[
                         {"label": "Count", "value": "count"},
+                        {"label": "Count-Unique", "value": "nunique"},
                         {"label": "Mean", "value": "mean"},
                         {"label": "Sum", "value": "sum"},
                         {"label": "Min", "value": "min"},
@@ -834,6 +948,8 @@ class HightlightCard(Card):
     def update_filter_x(value):
         """If the column is categorical, show a dropdown to filter the data
         else if data is numeric, show a slider to filter the data"""
+        if value is None:
+            return no_update
         column = data[value]
         # get the input id
         ctx = callback_context
@@ -904,6 +1020,7 @@ canvas.card_manager.register_card_class(ViolinCard)
 canvas.card_manager.register_card_class(HightlightCard)
 canvas.card_manager.register_card_class(BarChartCard)
 canvas.card_manager.register_card_class(MarkdownCard)
+canvas.card_manager.register_card_class(TopNBarChartCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
