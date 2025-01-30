@@ -1,7 +1,27 @@
-from cardcanvas import CardCanvas, Card
+from cardcanvas import CardCanvas, Card, GlobalSettings
+import json
 from dash import html
 import dash_mantine_components as dmc
 import datetime
+
+class Settings(GlobalSettings):
+    def render_settings(self):
+        return dmc.Stack(
+            [
+                dmc.Text("Some setting"),
+                dmc.Select(
+                    id={"type": "global-settings", "setting": "global_setting_1"},
+                    value=self.settings.get("global_setting_1", "Option 1"),
+                    data=[
+                        {"label": "Option 1", "value": "Option 1"},
+                        {"label": "Option 2", "value": "Option 2"},
+                        {"label": "Option 3", "value": "Option 3"},
+                        {"label": "Option 4", "value": "Option 4"},
+                    ],
+                ),
+            ]
+        )
+
 
 settings = {
     "title": "Card Canvas Demo",
@@ -41,11 +61,13 @@ class TimeCard(Card):
 
     def render(self):
         return dmc.Card(
-            dmc.Title(
-                f"Now time is: {datetime.datetime.now().strftime('%H:%M:%S')}",
-                c=self.settings.get("text-color", "white"),
-                order=2,
-            ),
+            [
+                dmc.Title(
+                    f"Now time is: {datetime.datetime.now().strftime('%H:%M:%S')}",
+                    c=self.settings.get("text-color", "white"),
+                    order=2,
+                ),
+            ],
             style={
                 "height": "100%",
                 "width": "100%",
@@ -79,6 +101,36 @@ class TimeCard(Card):
             ]
         )
 
+class GlobalSettingsCard(Card):
+    title = "Global Settings"
+    description = "Display the global settings"
+    icon = "mdi:settings"
+    color = "purple"
+
+    def render(self):
+        return dmc.Card(
+            [
+                dmc.JsonInput(
+                    value=json.dumps(self.global_settings, indent=2),
+                    minRows=15,
+                    maxRows=15,
+                    style={"width": "100%", "height": "100%"},
+                    resize="vertical",
+                    className="no-drag",
+                ),
+            ],
+            h="100%",
+            withBorder=True,
+        )
+
+    def render_settings(self):
+        return dmc.Stack(
+            [
+                dmc.Text(
+                    "This card does not have any settings, it just displays the global settings"
+                ),
+            ]
+        )
 
 class Options(Card):
     title = "List of options"
@@ -88,24 +140,33 @@ class Options(Card):
 
     def render(self):
         return dmc.Card(
-            dmc.Text(
-                f"You have selected {','.join(self.settings.get('option', []))}",
-            ),
+            [
+                dmc.Text(
+                    (
+                        f"You have selected {','.join(self.settings.get('option', []))}"
+                        f" and the global_setting_1 is {self.global_settings.get('global_setting_1', 'not set')}"
+                    ),
+                ),
+            ],
             style={"height": "100%", "width": "100%"},
             withBorder=True,
         )
 
     def render_settings(self):
-        return dmc.MultiSelect(
-            id={"type": "card-settings", "id": self.id, "setting": "option"},
-            placeholder="Select an option",
-            label="Select an option",
-            value=self.settings.get("option", []),
-            data=[
-                {"label": "Option 1", "value": "option1"},
-                {"label": "Option 2", "value": "option2"},
-                {"label": "Option 3", "value": "option3"},
-            ],
+        return dmc.Stack(
+            [
+                dmc.MultiSelect(
+                    id={"type": "card-settings", "id": self.id, "setting": "option"},
+                    placeholder="Select an option",
+                    label="Select an option",
+                    value=self.settings.get("option", []),
+                    data=[
+                        {"label": "Option 1", "value": "option1"},
+                        {"label": "Option 2", "value": "option2"},
+                        {"label": "Option 3", "value": "option3"},
+                    ],
+                ),
+            ]
         )
 
 
@@ -135,7 +196,9 @@ class ColorCard(Card):
 
 canvas = CardCanvas(settings)
 canvas.card_manager.register_card_class(TimeCard)
+canvas.card_manager.register_card_class(GlobalSettingsCard)
 canvas.card_manager.register_card_class(ColorCard)
 canvas.card_manager.register_card_class(Options)
+canvas.card_manager.register_global_settings_class(Settings)
 
 canvas.app.run_server(debug=True)

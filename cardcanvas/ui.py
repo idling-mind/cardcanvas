@@ -29,13 +29,24 @@ def icon_with_tooltip(id, icon, title, tooltip, **button_settings):
     )
 
 
-def main_buttons():
+def main_buttons(global_settings: bool = False):
     button_settings = {
         "size": "compact-s",
         "p": 4,
         "variant": "light",
     }
-    return dmc.Group(
+    children = []
+    if global_settings:
+        children.append(
+            icon_with_tooltip(
+                id="open-global-settings",
+                icon="mdi:cog-outline",
+                title="Settings",
+                tooltip="Open the global settings dialog",
+                **button_settings,
+            )
+        )
+    children.extend(
         [
             icon_with_tooltip(
                 id="add-cards",
@@ -117,7 +128,11 @@ def main_buttons():
                 size="lg",
                 ms="auto",
             ),
-        ],
+        ]
+    )
+
+    return dmc.Group(
+        children,
         id="toolbar",
         p="xs",
     )
