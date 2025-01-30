@@ -29,6 +29,7 @@ settings = {
     "start_config": json.loads((Path(__file__).parent / "layout.json").read_text()),
     "grid_compact_type": "vertical",
     "grid_row_height": 120,
+    "show_global_settings": False,
 }
 
 
