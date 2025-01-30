@@ -715,11 +715,23 @@ class TopNBarChartCard(Card):
 
     def render(self):
         column = self.settings.get("column", None)
+        column_filter = self.settings.get("column-filter", None)
         n = self.settings.get("n", 10)
         title = self.settings.get("title", "Top N Bar Chart")
         description = self.settings.get("description", f"Top {n} entries of {column}")
 
-        top_n = data[column].value_counts().head(n).reset_index()
+        filtered_data = data
+        if column_filter is not None:
+            if filtered_data[column].dtype in ["object", "string", "bool", "category"]:
+                filtered_data = filtered_data[filtered_data[column].isin(column_filter)]
+            else:
+                column_filter = [float(x) for x in column_filter]
+                filtered_data = filtered_data[
+                    (filtered_data[column] >= column_filter[0])
+                    & (filtered_data[column] <= column_filter[1])
+                ]
+
+        top_n = filtered_data[column].value_counts().head(n).reset_index()
         top_n.columns = [column, "count"]
         fig = px.bar(
             top_n,
@@ -756,9 +768,19 @@ class TopNBarChartCard(Card):
 
     def render_settings(self):
         column = self.settings.get("column", None)
+        column_filter = self.settings.get("column-filter", None)
         n = self.settings.get("n", 10)
         title = self.settings.get("title", "Top N Bar Chart")
         description = self.settings.get("description", "Top N Bar Chart description")
+
+        filter_children = None
+        if column is not None:
+            filter_children = generate_filter(
+                data[column],
+                {"type": "card-settings", "id": self.id, "setting": "column"},
+                default_value=column_filter,
+            )
+
         return dmc.Stack(
             [
                 dmc.Select(
@@ -773,6 +795,14 @@ class TopNBarChartCard(Card):
                     data=[
                         {"label": column, "value": column} for column in data.columns
                     ],
+                ),
+                html.Div(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "container": "column-filter",
+                    },
+                    children=filter_children,
                 ),
                 dmc.NumberInput(
                     id={
