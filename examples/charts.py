@@ -537,9 +537,19 @@ class BarChartCard(Card):
                     & (filtered_data[y] <= y_filter[1])
                 ]
         if color is None:
-            grouped_data = filtered_data.groupby(x)[y].agg(aggregation).reset_index()
+            if x and y:
+                grouped_data = (
+                    filtered_data.groupby(x)[y].agg(aggregation).reset_index()
+                )
+            else:
+                grouped_data = pd.DataFrame()
         else:
-            grouped_data = filtered_data.groupby([x, color])[y].agg(aggregation).reset_index()
+            if x and color and y:
+                grouped_data = (
+                    filtered_data.groupby([x, color])[y].agg(aggregation).reset_index()
+                )
+            else:
+                grouped_data = pd.DataFrame()
 
         fig = px.bar(
             template="mantine_light",
