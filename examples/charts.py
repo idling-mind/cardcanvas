@@ -994,6 +994,120 @@ class MarkdownCard(Card):
             ]
         )
 
+class MapCard(Card):
+    title = "Map"
+    description = "This card shows a map of a given dataset"
+    icon = "mdi:map"
+    grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
+
+    def render(self):
+        country = self.settings.get("country", None)
+        value = self.settings.get("value", None)
+        aggregation = self.settings.get("aggregation", "sum")
+        title = self.settings.get("title", "Map")
+        description = self.settings.get(
+            "description", f"Map of {country} aggregated by {value}"
+        )
+
+        aggregated_data = data.groupby(country)[value].agg(aggregation).reset_index()
+
+        figure = px.choropleth(
+            aggregated_data,
+            locations=country,
+            locationmode="country names",
+            color=value,
+            hover_name=country,
+            color_continuous_scale=px.colors.sequential.Plasma,
+            template="mantine_light",
+        )
+        figure.update_layout(margin=dict(l=0, r=0, t=15, b=0))
+        return dmc.Card(
+            [
+                dmc.Text(title, fz="30px", fw=600, c="blue"),
+                dmc.Text(
+                    description,
+                    fw=600,
+                    c="dimmed",
+                ),
+                dcc.Graph(
+                    figure=figure,
+                    id={"type": "card-control", "sub-type": "figure", "id": self.id},
+                    className="no-drag",
+                    responsive=True,
+                    style={"height": "100%"},
+                ),
+            ],
+            style={"height": "100%"},
+            withBorder=True,
+            shadow="xs",
+        )
+
+    def render_settings(self):
+        country = self.settings.get("country", None)
+        value = self.settings.get("value", None)
+        aggregation = self.settings.get("aggregation", "sum")
+        title = self.settings.get("title", "Map")
+        description = self.settings.get("description", "Map description")
+        return dmc.Stack(
+            [
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "country",
+                    },
+                    label="Country",
+                    value=country,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column} for column in data.columns
+                    ],
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "value",
+                    },
+                    label="Value",
+                    value=value,
+                    searchable=True,
+                    data=[
+                        {"label": column, "value": column} for column in data.columns
+                    ],
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "aggregation",
+                    },
+                    label="Aggregation",
+                    value=aggregation,
+                    data=[
+                        {"label": "Sum", "value": "sum"},
+                        {"label": "Mean", "value": "mean"},
+                        {"label": "Count", "value": "count"},
+                        {"label": "Min", "value": "min"},
+                        {"label": "Max", "value": "max"},
+                    ],
+                ),
+                dmc.TextInput(
+                    id={"type": "card-settings", "id": self.id, "setting": "title"},
+                    label="Title",
+                    value=title,
+                ),
+                dmc.TextInput(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "description",
+                    },
+                    label="Description",
+                    value=description,
+                ),
+            ]
+        )
 
 @callback(
     Output({"type": "card-control", "sub-type": "figure", "id": ALL}, "figure"),
@@ -1022,6 +1136,7 @@ canvas.card_manager.register_card_class(HightlightCard)
 canvas.card_manager.register_card_class(BarChartCard)
 canvas.card_manager.register_card_class(MarkdownCard)
 canvas.card_manager.register_card_class(TopNBarChartCard)
+canvas.card_manager.register_card_class(MapCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
