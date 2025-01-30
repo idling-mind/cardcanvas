@@ -20,6 +20,8 @@ import plotly.io as pio
 import pandas as pd
 from dash_iconify import DashIconify
 
+from data import nea_data as data
+
 settings = {
     "title": "The National Endowment for the Arts Creative Writing Fellowships",
     "subtitle": "Writers sponsored by NEA fellowships from the organization’s founding in 1965 to 2024",
@@ -29,10 +31,6 @@ settings = {
     "grid_row_height": 120,
 }
 
-data = pd.read_csv(
-    "https://raw.githubusercontent.com/plotly/Figure-Friday/refs/heads/main/2025/week-4/Post45_NEAData_Final.csv"
-)
-data["Age"] = data["nea_grant_year"] - data["birth_year"]
 
 class HistogramCard(Card):
     title = "Histogram"
