@@ -21,8 +21,9 @@ import pandas as pd
 from dash_iconify import DashIconify
 
 settings = {
-    "title": "Card Canvas Charts Demo",
-    "subtitle": "A Demo application showing the capabilities of CardCanvas with charts",
+    "title": "The National Endowment for the Arts Creative Writing Fellowships",
+    "subtitle": "Writers sponsored by NEA fellowships from the organization’s founding in 1965 to 2024",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/3/3b/National_Endowment_for_the_Arts_%28NEA%29_Logo_2018_Square_on_Black.svg",
     "start_config": json.loads((Path(__file__).parent / "layout.json").read_text()),
     "grid_compact_type": "vertical",
     "grid_row_height": 120,
