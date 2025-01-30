@@ -1001,25 +1001,37 @@ class MapCard(Card):
     grid_settings = {"w": 4, "h": 2, "minW": 4, "minH": 2}
 
     def render(self):
-        country = self.settings.get("country", None)
+        location = self.settings.get("location", None)
+        location_mode = self.settings.get("location_mode", "country names")
         value = self.settings.get("value", None)
         aggregation = self.settings.get("aggregation", "sum")
         title = self.settings.get("title", "Map")
         description = self.settings.get(
-            "description", f"Map of {country} aggregated by {value}"
+            "description", f"Map of {location} aggregated by {value}"
         )
 
-        aggregated_data = data.groupby(country)[value].agg(aggregation).reset_index()
+        if location and value:
+            aggregated_data = (
+                data.groupby(location)[value].agg(aggregation).reset_index()
+            )
+        else:
+            aggregated_data = pd.DataFrame()
 
         figure = px.choropleth(
             aggregated_data,
-            locations=country,
-            locationmode="country names",
+            locations=location,
+            locationmode=location_mode,
             color=value,
-            hover_name=country,
+            hover_name=location,
             color_continuous_scale=px.colors.sequential.Plasma,
             template="mantine_light",
         )
+
+        if location_mode == "USA-states":
+            figure.update_geos(fitbounds="locations", visible=False)
+        else:
+            figure.update_geos(projection_type="natural earth")
+
         figure.update_layout(margin=dict(l=0, r=0, t=15, b=0))
         return dmc.Card(
             [
@@ -1043,7 +1055,8 @@ class MapCard(Card):
         )
 
     def render_settings(self):
-        country = self.settings.get("country", None)
+        location = self.settings.get("location", None)
+        location_mode = self.settings.get("location_mode", "country names")
         value = self.settings.get("value", None)
         aggregation = self.settings.get("aggregation", "sum")
         title = self.settings.get("title", "Map")
@@ -1054,10 +1067,24 @@ class MapCard(Card):
                     id={
                         "type": "card-settings",
                         "id": self.id,
-                        "setting": "country",
+                        "setting": "location_mode",
                     },
-                    label="Country",
-                    value=country,
+                    label="Location Mode",
+                    value=location_mode,
+                    data=[
+                        {"label": "Country Names", "value": "country names"},
+                        {"label": "ISO-3", "value": "ISO-3"},
+                        {"label": "USA-states", "value": "USA-states"},
+                    ],
+                ),
+                dmc.Select(
+                    id={
+                        "type": "card-settings",
+                        "id": self.id,
+                        "setting": "location",
+                    },
+                    label="Location",
+                    value=location,
                     searchable=True,
                     data=[
                         {"label": column, "value": column} for column in data.columns
@@ -1088,6 +1115,7 @@ class MapCard(Card):
                         {"label": "Sum", "value": "sum"},
                         {"label": "Mean", "value": "mean"},
                         {"label": "Count", "value": "count"},
+                        {"label": "Count-Unique", "value": "nunique"},
                         {"label": "Min", "value": "min"},
                         {"label": "Max", "value": "max"},
                     ],
