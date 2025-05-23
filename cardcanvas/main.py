@@ -175,12 +175,12 @@ class CardCanvas:
             prevent_initial_call=True,
         )
         def load_cards(
-            card_config,
+            card_config_store,
             card_layout_store,
             global_settings,
         ):
             new_children = self.card_manager.render(
-                card_config,
+                card_config_store,
                 global_settings=global_settings,
                 debug=self.app.server.debug,
             )
@@ -428,12 +428,10 @@ class CardCanvas:
                 [
                     dmc.Stack(
                         [
-                            dmc.Text(
-                                card.title, fw="600", size="lg", c="primary", mb=0
-                            ),
+                            dmc.Text(card.title, fw="bold", size="lg", c="blue", mb=0),
                             dmc.Text(
                                 f"Card ID: {card.id}",
-                                fw="600",
+                                fw="bold",
                                 size="sm",
                                 c="gray",
                             ),
@@ -501,8 +499,8 @@ class CardCanvas:
             State("cardcanvas-main-store", "data"),
             prevent_initial_call=True,
         )
-        def download_layout(n_clicks, main_store):
-            if not n_clicks or not main_store:
+        def download_layout(nclicks, main_store):
+            if not nclicks or not main_store:
                 return no_update
             return dict(
                 content=json.dumps(main_store), filename="layout.json", type="json"
@@ -540,8 +538,8 @@ class CardCanvas:
             Input("clear-layout", "n_clicks"),
             prevent_initial_call=True,
         )
-        def clear_layout(n_clicks):
-            if not n_clicks:
+        def clear_layout(nclicks):
+            if not nclicks:
                 return no_update, no_update, no_update, no_update
             return (
                 {},
@@ -566,8 +564,8 @@ class CardCanvas:
             Input("reset-layout", "n_clicks"),
             prevent_initial_call=True,
         )
-        def reset_layout(n_clicks):
-            if not n_clicks:
+        def reset_layout(nclicks):
+            if not nclicks:
                 return no_update, no_update, no_update
             return (
                 start_card_config,

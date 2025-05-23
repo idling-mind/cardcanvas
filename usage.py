@@ -60,6 +60,7 @@ class TimeCard(Card):
     grid_settings = {"w": 6, "minW": 6}
 
     def render(self):
+        """Time card render"""
         return dmc.Card(
             [
                 dmc.Title(
@@ -108,6 +109,7 @@ class GlobalSettingsCard(Card):
     color = "purple"
 
     def render(self):
+        """Global settings card render"""
         return dmc.Card(
             [
                 dmc.JsonInput(
@@ -139,6 +141,7 @@ class Options(Card):
     color = "green"
 
     def render(self):
+        """Options card render"""
         return dmc.Card(
             [
                 dmc.Text(
@@ -177,6 +180,7 @@ class ColorCard(Card):
     color = "orange"
 
     def render(self):
+        """Color card render"""
         return dmc.Paper(
             [dmc.Card(bg=self.settings.get("color", "orange"), h="100%")],
             h="100%",
@@ -201,4 +205,4 @@ canvas.card_manager.register_card_class(ColorCard)
 canvas.card_manager.register_card_class(Options)
 canvas.card_manager.register_global_settings_class(Settings)
 
-canvas.app.run_server(debug=True)
+canvas.app.run(debug=True)
