@@ -124,18 +124,6 @@ class CardCanvas:
                     id="cardcanvas-global-store",
                     storage_type="memory",
                 ),
-                dcc.Store(
-                    id="cardcanvas-config-store-current",
-                    storage_type="memory",
-                ),
-                dcc.Store(
-                    id="cardcanvas-layout-store-current",
-                    storage_type="memory",
-                ),
-                dcc.Store(
-                    id="cardcanvas-global-store-current",
-                    storage_type="memory",
-                ),
                 dcc.Download(id="download-layout-data"),
                 dmc.NotificationProvider(),
                 html.Div(id="notification-container"),
@@ -181,49 +169,25 @@ class CardCanvas:
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
-            Output("cardcanvas-config-store-current", "data"),
-            Output("cardcanvas-layout-store-current", "data"),
-            Output("cardcanvas-global-store-current", "data"),
             Input("cardcanvas-config-store", "data"),
             Input("cardcanvas-layout-store", "data"),
             Input("cardcanvas-global-store", "data"),
-            State("cardcanvas-config-store-current", "data"),
-            State("cardcanvas-layout-store-current", "data"),
-            State("cardcanvas-global-store-current", "data"),
-            State("card-grid", "layouts"),
             prevent_initial_call=True,
         )
         def load_cards(
-            card_config,
+            card_config_store,
             card_layout_store,
             global_settings,
-            current_config,
-            current_layout,
-            global_settings_current,
-            layout,
         ):
-            if helpers.compare_dicts(
-                card_config, current_config
-            ) and helpers.compare_dicts(global_settings, global_settings_current):
-                new_children = no_update
-            else:
-                new_children = self.card_manager.render(
-                    card_config,
-                    global_settings=global_settings,
-                    debug=self.app.server.debug,
-                )
-            if helpers.compare_dicts(
-                card_layout_store, current_layout
-            ) and helpers.compare_dicts(layout, current_layout):
-                new_layout = no_update
-            else:
-                new_layout = card_layout_store
+            new_children = self.card_manager.render(
+                card_config_store,
+                global_settings=global_settings,
+                debug=self.app.server.debug,
+            )
+            new_layout = card_layout_store
             return (
                 new_children,
                 new_layout,
-                card_config,
-                card_layout_store,
-                global_settings,
             )
 
         @app.callback(
@@ -464,12 +428,10 @@ class CardCanvas:
                 [
                     dmc.Stack(
                         [
-                            dmc.Text(
-                                card.title, fw="600", size="lg", c="primary", mb=0
-                            ),
+                            dmc.Text(card.title, fw="bold", size="lg", c="blue", mb=0),
                             dmc.Text(
                                 f"Card ID: {card.id}",
-                                fw="600",
+                                fw="bold",
                                 size="sm",
                                 c="gray",
                             ),
@@ -519,21 +481,17 @@ class CardCanvas:
 
         @app.callback(
             Output({"type": "card-content", "index": MATCH}, "children"),
-            Output({"type": "card-interval", "index": MATCH}, "interval"),
             Input({"type": "card-interval", "index": MATCH}, "n_intervals"),
-            State({"type": "card-interval", "index": MATCH}, "interval"),
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-global-store", "data"),
         )
-        def update_card(n_intervals, interval, cards_config, global_settings):
+        def update_card(n_intervals, cards_config, global_settings):
             if not ctx.triggered_id or not cards_config:
                 return no_update
             card_objects = self.card_manager.card_objects(cards_config, global_settings)
             card_id = ctx.triggered_id.get("index")
             card = card_objects[card_id]
-            for card in card_objects.values():
-                card.debug = self.app.server.debug
-            return card.render(), card.interval
+            return card.render()
 
         @app.callback(
             Output("download-layout-data", "data"),
@@ -541,8 +499,8 @@ class CardCanvas:
             State("cardcanvas-main-store", "data"),
             prevent_initial_call=True,
         )
-        def download_layout(n_clicks, main_store):
-            if not n_clicks or not main_store:
+        def download_layout(nclicks, main_store):
+            if not nclicks or not main_store:
                 return no_update
             return dict(
                 content=json.dumps(main_store), filename="layout.json", type="json"
@@ -580,8 +538,8 @@ class CardCanvas:
             Input("clear-layout", "n_clicks"),
             prevent_initial_call=True,
         )
-        def clear_layout(n_clicks):
-            if not n_clicks:
+        def clear_layout(nclicks):
+            if not nclicks:
                 return no_update, no_update, no_update, no_update
             return (
                 {},
@@ -606,8 +564,8 @@ class CardCanvas:
             Input("reset-layout", "n_clicks"),
             prevent_initial_call=True,
         )
-        def reset_layout(n_clicks):
-            if not n_clicks:
+        def reset_layout(nclicks):
+            if not nclicks:
                 return no_update, no_update, no_update
             return (
                 start_card_config,
