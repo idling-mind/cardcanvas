@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cardcanvas"
-version = "0.3.0"
+version = "0.3.1"
 description = "Configurable dashboard with dash"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,7 +12,7 @@ dependencies = [
     "dash>=3.0.0",
     "dash-iconify>=0.1.2",
     "dash-mantine-components>=0.15.1",
-    "dash-snap-grid>=0.3.0",
+    "dash-snap-grid>=0.3.1",
 ]
 authors = [
     {name = "Najeem Muhammed", email = "najeem@gmail.com"}
