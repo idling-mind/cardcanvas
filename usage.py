@@ -1,6 +1,5 @@
 from cardcanvas import CardCanvas, Card, GlobalSettings
 import json
-from dash import html
 import dash_mantine_components as dmc
 import datetime
 
