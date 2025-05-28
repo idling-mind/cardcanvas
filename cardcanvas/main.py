@@ -278,14 +278,17 @@ class CardCanvas:
             Input("global-settings-ok", "n_clicks"),
             State({"type": "global-settings", "setting": ALL}, "id"),
             State({"type": "global-settings", "setting": ALL}, "value"),
+            State({"type": "global-settings", "setting": ALL}, "checked"),
             prevent_initial_call=True,
         )
-        def save_global_settings(nclicks, ids, values):
+        def save_global_settings(nclicks, ids, values, checked_values):
             if not nclicks or not ctx.triggered:
                 return no_update, no_update
             global_settings = {}
-            for idx, value in zip(ids, values):
+            for idx, value, checked in zip(ids, values, checked_values):
                 setting = idx.get("setting")
+                if value is None and (checked in [True, False]):
+                    value = checked
                 global_settings[setting] = value
             return global_settings, False
 
@@ -450,20 +453,23 @@ class CardCanvas:
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("settings-layout", "opened", allow_duplicate=True),
             Input("card-settings-ok", "n_clicks"),
-            State({"type": "card-settings", "id": ALL, "setting": ALL}, "value"),
             State({"type": "card-settings", "id": ALL, "setting": ALL}, "id"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "value"),
+            State({"type": "card-settings", "id": ALL, "setting": ALL}, "checked"),
             State("cardcanvas-config-store", "data"),
             prevent_initial_call=True,
         )
-        def save_card_settings(nclicks, values, ids, card_config):
+        def save_card_settings(nclicks, ids, values, checked_values, card_config):
             if not nclicks or not ctx.triggered:
                 return no_update, no_update
-            for idx, val in zip(ids, values):
+            for idx, value, checked in zip(ids, values, checked_values):
                 card_id = idx.get("id")
                 setting = idx.get("setting")
                 if card_id not in card_config:
                     continue
-                card_config[card_id]["settings"][setting] = val
+                if value is None and (checked in [True, False]):
+                    value = checked
+                card_config[card_id]["settings"][setting] = value
             return card_config, False
 
         @app.callback(
