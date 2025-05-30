@@ -599,11 +599,10 @@ class CardCanvas:
 
         @app.callback(
             Output("mantine-provider", "forceColorScheme"),
-            Input("color-scheme-toggle", "n_clicks"),
+            Input("color-scheme-toggle", "checked"),
             State("mantine-provider", "forceColorScheme"),
-            prevent_initial_call=True,
         )
-        def switch_theme(_, theme):
-            return "dark" if theme == "light" else "light"
+        def switch_theme(toggle, theme):
+            return "light" if toggle else "dark"
 
         return app

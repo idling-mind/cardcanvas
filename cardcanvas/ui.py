@@ -106,26 +106,23 @@ def main_buttons(global_settings: bool = False):
                     ),
                 ]
             ),
-            dmc.Switch(
-                "Editable Layout",
-                id="edit-layout",
-                size="xs",
-                checked=False,
-                persistence=True,
+            dmc.Tooltip(
+                dmc.Switch(
+                    id="edit-layout",
+                    offLabel=DashIconify(icon="material-symbols:edit-off", width=20),
+                    onLabel=DashIconify(icon="material-symbols:edit", width=20),
+                    size="md",
+                    checked=False,
+                    persistence=True,
+                ),
+                label="Toggle edit mode to modify, remove or move cards",
             ),
-            dmc.ActionIcon(
-                [
-                    dmc.Paper(
-                        DashIconify(icon="radix-icons:sun", width=25), darkHidden=True
-                    ),
-                    dmc.Paper(
-                        DashIconify(icon="radix-icons:moon", width=25), lightHidden=True
-                    ),
-                ],
-                variant="transparent",
-                color="yellow",
+            dmc.Switch(
                 id="color-scheme-toggle",
-                size="lg",
+                offLabel=DashIconify(icon="radix-icons:moon", width=20),
+                onLabel=DashIconify(icon="radix-icons:sun", width=20),
+                size="md",
+                persistence=True,
                 ms="auto",
             ),
         ]
