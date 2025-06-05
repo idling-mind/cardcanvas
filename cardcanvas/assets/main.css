@@ -2,9 +2,6 @@
     --card-menu-top: 5px;
     --card-menu-right: 5px;
 }
-#main-menu-collapse {
-    background-color: var(--mantine-color-body);
-    }
 .card-menu {
     position: absolute;
     top: var(--card-menu-top);

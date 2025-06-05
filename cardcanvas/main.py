@@ -83,30 +83,59 @@ class CardCanvas:
             p="xs",
         )
 
+        background_color = settings.get("background_color")
+
         main_buttons = dmc.Collapse(
             id="main-menu-collapse",
             children=[ui.main_buttons(global_settings=show_global_settings)],
             opened=True,
-            style={"position": "sticky", "top": 0, "zIndex": 10},
+            style={
+                "position": "sticky",
+                "top": 0,
+                "zIndex": 10,
+                "backgroundColor": background_color,
+            },
         )
+
+        stage_children = [
+            title_layout,
+            main_buttons,
+            ResponsiveGrid(
+                id="card-grid",
+                children=[],
+                cols=settings.get(
+                    "grid_cols",
+                    {"xl": 24, "lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
+                ),
+                breakpoints=settings.get(
+                    "grid_breakpoints",
+                    {
+                        "xl": 1920,
+                        "lg": 1200,
+                        "md": 1080,
+                        "sm": 768,
+                        "xs": 576,
+                        "xxs": 480,
+                    },
+                ),
+                rowHeight=settings.get("grid_row_height", 50),
+                compactType=settings.get("grid_compact_type", None),
+                draggableCancel=".no-drag *",
+                isDroppable=True,
+                layouts={"lg": []},
+                width=100,
+            ),
+        ]
+        if footer_component:
+            stage_children.append(footer_component)
 
         stage_layout = dmc.Container(
             fluid=True,
-            children=[
-                title_layout,
-                main_buttons,
-                ResponsiveGrid(
-                    id="card-grid",
-                    children=[],
-                    cols={"lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
-                    rowHeight=settings.get("grid_row_height", 50),
-                    compactType=settings.get("grid_compact_type", None),
-                    draggableCancel=".no-drag *",
-                    isDroppable=True,
-                    layouts={"lg": []},
-                    width=100,
-                ),
-            ],
+            children=stage_children,
+            style={
+                "backgroundColor": background_color,
+                "minHeight": "100vh",
+            },
         )
 
         invisible_controls = html.Div(
@@ -125,8 +154,7 @@ class CardCanvas:
                     storage_type="memory",
                 ),
                 dcc.Download(id="download-layout-data"),
-                dmc.NotificationProvider(),
-                html.Div(id="notification-container"),
+                dmc.NotificationContainer(id="notification-container"),
             ],
         )
 
@@ -140,8 +168,6 @@ class CardCanvas:
         )
 
         main_components = [stage_layout, settings_layout, invisible_controls]
-        if footer_component:
-            main_components.append(footer_component)
 
         app.layout = dmc.MantineProvider(
             children=main_components,
@@ -193,7 +219,7 @@ class CardCanvas:
         @app.callback(
             Output("cardcanvas-main-store", "data", allow_duplicate=True),
             Output("cardcanvas-layout-store", "data", allow_duplicate=True),
-            Output("notification-container", "children"),
+            Output("notification-container", "sendNotifications"),
             Input("save-layout", "n_clicks"),
             State("card-grid", "layouts"),
             State("cardcanvas-config-store", "data"),
@@ -212,19 +238,21 @@ class CardCanvas:
                 # This is required since there may be changes in the layout which
                 # are not reflected in the cardcanvas_layout_store
                 card_layouts,
-                dmc.Notification(
-                    title="Layout Saved",
-                    message="The layout has been saved",
-                    color="teal",
-                    action="show",
-                ),
+                [
+                    dict(
+                        title="Layout Saved",
+                        message="The layout has been saved",
+                        color="teal",
+                        action="show",
+                    )
+                ],
             )
 
         @app.callback(
             Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("cardcanvas-global-store", "data", allow_duplicate=True),
-            Output("notification-container", "children", allow_duplicate=True),
+            Output("notification-container", "sendNotifications", allow_duplicate=True),
             Input("restore-layout", "n_clicks"),
             State("cardcanvas-main-store", "data"),
             prevent_initial_call=True,
@@ -236,12 +264,14 @@ class CardCanvas:
                 main_store.get("card_layouts", start_card_layout),
                 main_store.get("card_config", start_card_config),
                 main_store.get("global_settings", start_global_settings),
-                dmc.Notification(
-                    title="Layout Reset",
-                    message="The layout has been reset to the last saved state",
-                    color="orange",
-                    action="show",
-                ),
+                [
+                    dict(
+                        title="Layout Reset",
+                        message="The layout has been reset to the last saved state",
+                        color="orange",
+                        action="show",
+                    )
+                ],
             )
 
         @app.callback(
@@ -540,7 +570,7 @@ class CardCanvas:
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("cardcanvas-layout-store", "data", allow_duplicate=True),
             Output("cardcanvas-global-store", "data", allow_duplicate=True),
-            Output("notification-container", "children", allow_duplicate=True),
+            Output("notification-container", "sendNotifications", allow_duplicate=True),
             Input("clear-layout", "n_clicks"),
             prevent_initial_call=True,
         )
@@ -551,22 +581,24 @@ class CardCanvas:
                 {},
                 {},
                 {},
-                dmc.Notification(
-                    title="Layout Cleared",
-                    message=(
-                        "The layout has been cleared."
-                        " Click on save to save the changes."
-                        " Click on restore to restore the layout.",
-                    ),
-                    color="red",
-                    action="show",
-                ),
+                [
+                    dict(
+                        title="Layout Cleared",
+                        message=(
+                            "The layout has been cleared."
+                            " Click on save to save the changes."
+                            " Click on restore to restore the layout.",
+                        ),
+                        color="red",
+                        action="show",
+                    )
+                ],
             )
 
         @app.callback(
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
             Output("cardcanvas-layout-store", "data", allow_duplicate=True),
-            Output("notification-container", "children", allow_duplicate=True),
+            Output("notification-container", "sendNotifications", allow_duplicate=True),
             Input("reset-layout", "n_clicks"),
             prevent_initial_call=True,
         )
@@ -576,16 +608,18 @@ class CardCanvas:
             return (
                 start_card_config,
                 start_card_layout,
-                dmc.Notification(
-                    title="Layout Reset",
-                    message=(
-                        "The layout has been reset to default layout."
-                        " Click on save to save the changes."
-                        " Click on restore to restore the layout.",
-                    ),
-                    color="red",
-                    action="show",
-                ),
+                [
+                    dict(
+                        title="Layout Reset",
+                        message=(
+                            "The layout has been reset to default layout."
+                            " Click on save to save the changes."
+                            " Click on restore to restore the layout.",
+                        ),
+                        color="red",
+                        action="show",
+                    )
+                ],
             )
 
         @app.callback(

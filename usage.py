@@ -29,6 +29,19 @@ settings = {
     "logo": "https://img.icons8.com/?size=80&id=cjlQopC5NR3D&format=png",
     "grid_compact_type": "vertical",
     "grid_row_height": 100,
+    "grid_cols": {"xl": 24, "lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
+    "grid_breakpoints": {
+        "xl": 1600,
+        "lg": 1200,
+        "md": 960,
+        "sm": 600,
+        "xs": 480,
+        "xxs": 320,
+    },
+    "background_color": "light-dark(#eee, #223)",
+    "footer_component": dmc.Card(
+        dmc.Box("This is the footer of the Card Canvas demo application"),
+    ),
 }
 
 
