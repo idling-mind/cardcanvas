@@ -339,16 +339,32 @@ class CardCanvas:
                             " displayed. Configure them by clicking on the settings icon.",
                             variant="muted",
                         ),
+                        dmc.TextInput(id="card-search", placeholder="Search cards", debounce=300),
                         dmc.Stack(
                             [
                                 ui.render_card_preview(card_class)
                                 for card_class in self.card_manager.card_classes.values()
-                            ]
+                            ],
+                            id="card-list",
                         ),
                     ]
                 )
             ]
             return True, children
+        
+        @app.callback(
+            Output("card-list", "children"),
+            Input("card-search", "value"),
+            prevent_initial_call=True,
+        )
+        def update_card_search(search_value):
+            return [
+                ui.render_card_preview(card_class)
+                for card_class in self.card_manager.card_classes.values()
+                if not search_value
+                or search_value.lower() in card_class.title.lower()
+                or search_value.lower() in card_class.description.lower()
+            ]
 
         @app.callback(
             Output("cardcanvas-config-store", "data", allow_duplicate=True),
