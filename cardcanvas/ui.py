@@ -202,9 +202,23 @@ def render_card_preview(card_class) -> DraggableDiv:
                                 dmc.Text(card_class.description, fz=14, c="gray"),
                             ],
                             gap=0,
+                            flex=1,
+                        ),
+                        dmc.Tooltip(
+                            dmc.ActionIcon(
+                                DashIconify(icon="mdi:plus", width=20),
+                                id={"type": "add-card", "index": card_class.__name__},
+                                variant="light",
+                                size="lg",
+                            ),
+                            label="Add card to layout",
+                            position="top",
+                            withArrow=True,
                         ),
                     ],
                     wrap="nowrap",
+                    justify="space-between",
+
                 ),
                 style={"cursor": "grab"},
                 p="sm",

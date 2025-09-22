@@ -2,6 +2,7 @@ import base64
 import copy
 import json
 import logging
+import random
 from typing import Any
 from uuid import uuid4
 
@@ -26,9 +27,7 @@ from . import ui
 from .card_manager import CardManager
 from .settings import DEFAULT_THEME
 
-_dash_renderer._set_react_version("18.2.0")
 dmc.add_figure_templates()
-
 
 class CardCanvas:
     def __init__(
@@ -387,6 +386,43 @@ class CardCanvas:
             }
             # dropped_item["i"] returns the id of dropped object. In this case, it is the card class.
             card_class = dropped_item["i"]
+            card_config[card_id] = {"card_class": card_class, "settings": {}}
+            card_class_obj = self.card_manager.card_classes.get(card_class)
+            if (
+                card_class_obj
+                and hasattr(card_class_obj, "grid_settings")
+                and isinstance(card_class_obj.grid_settings, dict)
+            ):
+                new_layout_item.update(card_class_obj.grid_settings)
+            if not card_layouts:
+                card_layouts = {"lg": []}
+            for key in card_layouts.keys():
+                card_layouts[key].append(new_layout_item)
+            return card_config, card_layouts
+
+        @app.callback(
+            Output("cardcanvas-config-store", "data", allow_duplicate=True),
+            Output("cardcanvas-layout-store", "data", allow_duplicate=True),
+            Input({"type": "add-card", "index": ALL}, "n_clicks"),
+            State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
+            State("card-grid", "col"),
+            prevent_initial_call=True,
+        )
+        def add_new_card_action_icon(nclicks, card_config, card_layouts, col_count):
+            if not nclicks or not any(nclicks) or not ctx.triggered:
+                return no_update, no_update
+            if not ctx.triggered_id or not isinstance(ctx.triggered_id, dict):
+                return no_update, no_update
+            card_id = str(uuid4())
+            new_layout_item = {
+                "i": card_id,
+                "x": random.randint(0, col_count - 1),
+                "y": 10000,
+                "w": 1,
+                "h": 1,
+            }
+            card_class = ctx.triggered_id["index"]
             card_config[card_id] = {"card_class": card_class, "settings": {}}
             card_class_obj = self.card_manager.card_classes.get(card_class)
             if (
