@@ -83,7 +83,7 @@ class CardCanvas:
             p="xs",
         )
 
-        background_color = settings.get("background_color")
+        background_color = settings.get("background_color", "light-dark(#eee, #222)")
 
         main_buttons = dmc.Collapse(
             id="main-menu-collapse",
