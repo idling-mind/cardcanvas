@@ -30,6 +30,7 @@ settings = {
     "grid_compact_type": "vertical",
     "grid_row_height": 120,
     "show_global_settings": False,
+    "background_color": "light-dark(#eee, #222)",
 }
 
 
@@ -1207,4 +1208,4 @@ canvas.card_manager.register_card_class(MapCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
-    canvas.app.run_server(debug=True)
+    canvas.app.run(debug=True)
