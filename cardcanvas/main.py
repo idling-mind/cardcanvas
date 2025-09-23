@@ -18,7 +18,6 @@ from dash import (
     dcc,
     html,
     no_update,
-    _dash_renderer,
 )
 from dash_snap_grid import ResponsiveGrid
 from dash_iconify import DashIconify
