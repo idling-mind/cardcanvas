@@ -2,6 +2,8 @@
 
 ![](static/animation.gif)
 
+[Live Demo](https://py.cafe/app/idling-mind/cardcanvas-chart-demo)
+
 CardCanvas is a library to create runtime-configurable dashboards using
 plotly dash. With a few class definitions, you can let your users build their
 dashboards and also analyze and present the data the way they want.
