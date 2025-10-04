@@ -36,8 +36,8 @@ class CardCanvas:
         self.card_manager = CardManager()
         self.dash_options = dash_options or {}
 
-    def run(self):
-        self.app.run_server(debug=True)
+    def run(self,*args, **kwargs):
+        self.app.run(*args, **kwargs)
 
     @property
     def app(self):
@@ -74,9 +74,17 @@ class CardCanvas:
         main_loader = dcc.Loading(
             children=html.Div(
                 id="main-loader-output",
-                children=menu_icon,
             ),
-            custom_spinner=dmc.Loader()
+            custom_spinner=dmc.Loader(),
+            parent_style={
+                "position": "absolute",
+                "width": "100px",
+                "height": "100px",
+                "top": "0",
+                "left": "50%",
+                "transform": "translateX(-50px)",
+                "zIndex": 1000,
+            },
         )
 
         title_layout = dmc.Group(
@@ -84,7 +92,7 @@ class CardCanvas:
                 title_component
                 if title_component
                 else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
-                main_loader,
+                menu_icon,
             ],
             justify="space-between",
             p="xs",
@@ -107,6 +115,7 @@ class CardCanvas:
         stage_children = [
             title_layout,
             main_buttons,
+            main_loader,
             ResponsiveGrid(
                 id="card-grid",
                 children=[],
@@ -222,7 +231,7 @@ class CardCanvas:
             return (
                 new_children,
                 new_layout,
-                menu_icon,
+                "",
             )
 
         @app.callback(
