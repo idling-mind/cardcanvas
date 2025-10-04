@@ -66,16 +66,25 @@ class CardCanvas:
         )
         app.title = f"{title}: {subtitle}" if subtitle else title
 
+        menu_icon = dmc.ActionIcon(
+                    id="open-main-menu",
+                    children=DashIconify(icon="mdi:menu"),
+                    variant="outline",
+                )
+        main_loader = dcc.Loading(
+            children=html.Div(
+                id="main-loader-output",
+                children=menu_icon,
+            ),
+            custom_spinner=dmc.Loader()
+        )
+
         title_layout = dmc.Group(
             [
                 title_component
                 if title_component
                 else ui.get_title_layout(title, subtitle=subtitle, logo=logo),
-                dmc.ActionIcon(
-                    id="open-main-menu",
-                    children=DashIconify(icon="mdi:menu"),
-                    variant="outline",
-                ),
+                main_loader,
             ],
             justify="space-between",
             p="xs",
@@ -193,6 +202,7 @@ class CardCanvas:
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
+            Output("main-loader-output", "children"),
             Input("cardcanvas-config-store", "data"),
             Input("cardcanvas-layout-store", "data"),
             Input("cardcanvas-global-store", "data"),
@@ -212,6 +222,7 @@ class CardCanvas:
             return (
                 new_children,
                 new_layout,
+                menu_icon,
             )
 
         @app.callback(
@@ -680,6 +691,8 @@ class CardCanvas:
             prevent_initial_call=True,
         )
         def open_main_menu(n_clicks, status):
+            if not n_clicks:
+                return no_update
             return not status
 
         @app.callback(
