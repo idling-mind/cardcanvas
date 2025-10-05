@@ -140,6 +140,7 @@ class Card(ABC):
                     children=card_content,
                 ),
                 parent_style={"height": "100%"},
+                custom_spinner=dmc.Loader(),
             ),
             buttons,
         ]

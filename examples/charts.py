@@ -1208,4 +1208,4 @@ canvas.card_manager.register_card_class(MapCard)
 server = canvas.app.server
 
 if __name__ == "__main__":
-    canvas.app.run(debug=True)
+    canvas.run(debug=True)

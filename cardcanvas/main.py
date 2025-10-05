@@ -75,7 +75,7 @@ class CardCanvas:
             children=html.Div(
                 id="main-loader-output",
             ),
-            custom_spinner=dmc.Loader(),
+            custom_spinner=dmc.Loader(type=settings.get("loader_type", "oval")),
             parent_style={
                 "position": "absolute",
                 "width": "100px",
