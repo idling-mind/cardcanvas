@@ -25,6 +25,7 @@ from dash_iconify import DashIconify
 from . import ui
 from .card_manager import CardManager
 from .settings import DEFAULT_THEME
+from .helpers import compare_dicts
 
 dmc.add_figure_templates()
 
@@ -151,6 +152,18 @@ class CardCanvas:
                     id="cardcanvas-global-store",
                     storage_type="memory",
                 ),
+                dcc.Store(
+                    id="cardcanvas-config-store-previous",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-layout-store-previous",
+                    storage_type="memory",
+                ),
+                dcc.Store(
+                    id="cardcanvas-global-store-previous",
+                    storage_type="memory",
+                ),
                 dcc.Download(id="download-layout-data"),
                 dmc.NotificationContainer(id="notification-container"),
             ],
@@ -193,25 +206,48 @@ class CardCanvas:
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
+            Output("cardcanvas-config-store-previous", "data"),
+            Output("cardcanvas-layout-store-previous", "data"),
+            Output("cardcanvas-global-store-previous", "data"),
             Input("cardcanvas-config-store", "data"),
             Input("cardcanvas-layout-store", "data"),
             Input("cardcanvas-global-store", "data"),
+            State("cardcanvas-config-store-previous", "data"),
+            State("cardcanvas-layout-store-previous", "data"),
+            State("cardcanvas-global-store-previous", "data"),
             prevent_initial_call=True,
         )
         def load_cards(
             card_config_store,
             card_layout_store,
             global_settings,
+            previous_config,
+            previous_layout,
+            previous_global,
         ):
-            new_children = self.card_manager.render(
-                card_config_store,
-                global_settings=global_settings,
-                debug=self.app.server.debug,
-            )
-            new_layout = card_layout_store
+            if compare_dicts(card_config_store, previous_config) and compare_dicts(
+                global_settings, previous_global
+            ):
+                new_children = no_update
+            else:
+                new_children = self.card_manager.render(
+                    card_config_store,
+                    global_settings=global_settings,
+                    debug=self.app.server.debug,
+                )
+            if compare_dicts(card_layout_store, previous_layout):
+                new_layout = no_update
+            else:
+                new_layout = card_layout_store
+            previous_config = copy.deepcopy(card_config_store)
+            previous_layout = copy.deepcopy(card_layout_store)
+            previous_global = copy.deepcopy(global_settings)
             return (
                 new_children,
                 new_layout,
+                previous_config,
+                previous_layout,
+                previous_global,
             )
 
         @app.callback(
