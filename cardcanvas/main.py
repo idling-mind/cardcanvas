@@ -215,6 +215,7 @@ class CardCanvas:
             State("cardcanvas-config-store-previous", "data"),
             State("cardcanvas-layout-store-previous", "data"),
             State("cardcanvas-global-store-previous", "data"),
+            State("card-grid", "layouts"),
             prevent_initial_call=True,
         )
         def load_cards(
@@ -224,6 +225,7 @@ class CardCanvas:
             previous_config,
             previous_layout,
             previous_global,
+            current_layout,
         ):
             if compare_dicts(card_config_store, previous_config) and compare_dicts(
                 global_settings, previous_global
@@ -235,7 +237,9 @@ class CardCanvas:
                     global_settings=global_settings,
                     debug=self.app.server.debug,
                 )
-            if compare_dicts(card_layout_store, previous_layout):
+            if compare_dicts(card_layout_store, previous_layout) and compare_dicts(
+                current_layout, previous_layout
+            ):
                 new_layout = no_update
             else:
                 new_layout = card_layout_store
