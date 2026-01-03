@@ -29,6 +29,7 @@ from .helpers import compare_dicts
 
 dmc.add_figure_templates()
 
+
 class CardCanvas:
     def __init__(
         self, settings: dict[str, Any], dash_options: dict[str, Any] | None = None
@@ -206,6 +207,9 @@ class CardCanvas:
         @app.callback(
             Output("card-grid", "children"),
             Output("card-grid", "layouts"),
+            Output(
+                {"type": "card-content", "index": ALL}, "children", allow_duplicate=True
+            ),
             Output("cardcanvas-config-store-previous", "data"),
             Output("cardcanvas-layout-store-previous", "data"),
             Output("cardcanvas-global-store-previous", "data"),
@@ -227,10 +231,32 @@ class CardCanvas:
             previous_global,
             current_layout,
         ):
+            updated_children = [no_update] * len(ctx.outputs_list[2])
+            new_children = no_update
+            new_layout = no_update
             if compare_dicts(card_config_store, previous_config) and compare_dicts(
                 global_settings, previous_global
             ):
                 new_children = no_update
+            elif (
+                card_config_store is not None
+                and previous_config is not None
+                and card_config_store.keys() == previous_config.keys()
+            ):
+                # Only update changed cards
+                for i, card_ctx in enumerate(ctx.outputs_list[2]):
+                    card_id = card_ctx["id"]["index"]
+                    if compare_dicts(
+                        card_config_store.get(card_id, {}),
+                        previous_config.get(card_id, {}),
+                    ) and compare_dicts(global_settings, previous_global):
+                        updated_children[i] = no_update
+                    else:
+                        card_objects = self.card_manager.card_objects(
+                            card_config_store, global_settings
+                        )
+                        if card_id in card_objects:
+                            updated_children[i] = card_objects[card_id].render()
             else:
                 new_children = self.card_manager.render(
                     card_config_store,
@@ -249,6 +275,7 @@ class CardCanvas:
             return (
                 new_children,
                 new_layout,
+                updated_children,
                 previous_config,
                 previous_layout,
                 previous_global,
@@ -377,7 +404,9 @@ class CardCanvas:
                             " displayed. Configure them by clicking on the settings icon.",
                             variant="muted",
                         ),
-                        dmc.TextInput(id="card-search", placeholder="Search cards", debounce=300),
+                        dmc.TextInput(
+                            id="card-search", placeholder="Search cards", debounce=300
+                        ),
                         dmc.Stack(
                             [
                                 ui.render_card_preview(card_class)
@@ -389,7 +418,7 @@ class CardCanvas:
                 )
             ]
             return True, children
-        
+
         @app.callback(
             Output("card-list", "children"),
             Input("card-search", "value"),
