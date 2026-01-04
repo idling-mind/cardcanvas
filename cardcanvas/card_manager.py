@@ -139,7 +139,9 @@ class Card(ABC):
                     style={"height": "100%"},
                     children=card_content,
                 ),
+                custom_spinner=dmc.Loader(type="oval", ml="md"),
                 parent_style={"height": "100%"},
+                overlay_style={"visibility":"visible", "filter": "blur(2px)"},
             ),
             buttons,
         ]

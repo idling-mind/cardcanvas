@@ -96,8 +96,16 @@ class CardCanvas:
                 "backgroundColor": background_color,
             },
         )
+        loading_indicator = html.Div(
+                dcc.Loading(
+                id="cardcanvas-loading-anim",
+                children=html.Div(id="cardcanvas-loading-trigger", style={"display": "none"}),
+                custom_spinner=html.Span(className="loader")
+            ),
+        )
 
         stage_children = [
+            loading_indicator,
             title_layout,
             main_buttons,
             ResponsiveGrid(
@@ -208,6 +216,7 @@ class CardCanvas:
             Output(
                 {"type": "card-content", "index": ALL}, "children", allow_duplicate=True
             ),
+            Output("cardcanvas-loading-trigger", "children", allow_duplicate=True),
             Input("cardcanvas-event-store", "data"),
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
@@ -242,7 +251,7 @@ class CardCanvas:
                     card_config_store, global_settings
                 )
                 if card_id not in card_objects:
-                    return no_update, no_update, no_update
+                    return no_update, no_update, no_update, no_update
                 card = card_objects[card_id]
                 new_child = card.render_container()
                 new_children = current_children + [new_child]
@@ -273,6 +282,7 @@ class CardCanvas:
                 new_children,
                 new_layout,
                 updated_children,
+                no_update,
             )
 
         @app.callback(
@@ -405,6 +415,8 @@ class CardCanvas:
         )
         def add_cards(nclicks):
             logging.debug("Callback add_cards called")
+            if not nclicks:
+                return no_update, no_update
             children = [
                 dmc.Stack(
                     [
