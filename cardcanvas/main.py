@@ -348,6 +348,8 @@ class CardCanvas:
             prevent_initial_call=True,
         )
         def open_settings(nclicks, global_settings):
+            if not nclicks:
+                return no_update, no_update
             logging.debug("Callback open_settings called")
             children = [
                 dmc.Title("Global Settings", order=2),
@@ -372,6 +374,7 @@ class CardCanvas:
         @app.callback(
             Output("cardcanvas-global-store", "data", allow_duplicate=True),
             Output("settings-layout", "opened", allow_duplicate=True),
+            Output("cardcanvas-event-store", "data", allow_duplicate=True),
             Input("global-settings-ok", "n_clicks"),
             State({"type": "global-settings", "setting": ALL}, "id"),
             State({"type": "global-settings", "setting": ALL}, "value"),
@@ -381,14 +384,18 @@ class CardCanvas:
         def save_global_settings(nclicks, ids, values, checked_values):
             logging.debug("Callback save_global_settings called")
             if not nclicks or not ctx.triggered:
-                return no_update, no_update
+                return no_update, no_update, no_update
             global_settings = {}
             for idx, value, checked in zip(ids, values, checked_values):
                 setting = idx.get("setting")
                 if value is None and (checked in [True, False]):
                     value = checked
                 global_settings[setting] = value
-            return global_settings, False
+            event = {
+                "type": "re-render",
+                "data": None,
+            }
+            return global_settings, False, event
 
         @app.callback(
             Output("settings-layout", "opened", allow_duplicate=True),
