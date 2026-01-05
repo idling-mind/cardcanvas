@@ -25,7 +25,6 @@ from dash_iconify import DashIconify
 from . import ui
 from .card_manager import CardManager
 from .settings import DEFAULT_THEME
-from .helpers import compare_dicts
 
 dmc.add_figure_templates()
 
