@@ -117,13 +117,29 @@ def main_buttons(global_settings: bool = False):
                 ),
                 label="Toggle edit mode to modify, remove or move cards",
             ),
-            dmc.Switch(
-                id="color-scheme-toggle",
-                offLabel=DashIconify(icon="radix-icons:moon", width=20),
-                onLabel=DashIconify(icon="radix-icons:sun", width=20),
+            dmc.Tooltip(
+                dmc.Switch(
+                    id="color-scheme-toggle",
+                    offLabel=DashIconify(icon="radix-icons:moon", width=20),
+                    onLabel=DashIconify(icon="radix-icons:sun", width=20),
+                    size="md",
+                    persistence=True,
+                    # ms="auto",
+                ),
+                label="Toggle color scheme between light and dark mode",
+            ),
+            dmc.SegmentedControl(
+                id="tabs",
+                data=[],
                 size="md",
-                persistence=True,
-                ms="auto",
+                ml="auto",
+            ),
+            icon_with_tooltip(
+                id="update-tabs",
+                icon="iconoir:multiple-pages-plus",
+                title="Configure Tabs",
+                tooltip="Add/remove/rename tabs and assign cards to different tabs.",
+                **button_settings,
             ),
         ]
     )

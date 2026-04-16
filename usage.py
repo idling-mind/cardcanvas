@@ -38,7 +38,7 @@ settings = {
         "xs": 480,
         "xxs": 320,
     },
-    "background_color": "light-dark(#eee, #223)",
+    "background_color": "light-dark(#eee, #222)",
     "footer_component": dmc.Card(
         dmc.Box("This is the footer of the Card Canvas demo application"),
     ),

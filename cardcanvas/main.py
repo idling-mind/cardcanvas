@@ -161,6 +161,10 @@ class CardCanvas:
                     storage_type="memory",
                 ),
                 dcc.Store(
+                    id="cardcanvas-tab-store",
+                    storage_type="memory",
+                ),
+                dcc.Store(
                     id="cardcanvas-event-store",
                     storage_type="memory",
                 ),
@@ -216,12 +220,15 @@ class CardCanvas:
                 {"type": "card-content", "index": ALL}, "children", allow_duplicate=True
             ),
             Output("cardcanvas-loading-trigger", "children", allow_duplicate=True),
+            Output("tabs", "data"),
             Input("cardcanvas-event-store", "data"),
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
             State("cardcanvas-global-store", "data"),
+            State("cardcanvas-tab-store", "data"),
             State("card-grid", "layouts"),
             State("card-grid", "children"),
+            State("tabs", "value"),
             prevent_initial_call=True,
         )
         def load_cards(
@@ -229,13 +236,16 @@ class CardCanvas:
             card_config_store,
             card_layout_store,
             global_settings,
+            tab_store,
             current_layout,
             current_children,
+            current_tab,
         ):
             logging.debug("Callback load_cards called")
             new_children = no_update
             new_layout = no_update
             updated_children = [no_update] * len(ctx.outputs_list[2])
+            tabs = no_update
             if event["type"] == "re-render":
                 new_children = self.card_manager.render(
                     card_config_store,
@@ -277,11 +287,13 @@ class CardCanvas:
                     for child in current_children
                     if child["props"]["id"] != card_id
                 ]
+            tabs = tab_store if tab_store else ["Default"]
             return (
                 new_children,
                 new_layout,
                 updated_children,
                 no_update,
+                tabs,
             )
 
         @app.callback(
@@ -836,5 +848,61 @@ class CardCanvas:
         def switch_theme(toggle, theme):
             logging.debug("Callback switch_theme called")
             return "light" if toggle else "dark"
+
+        @app.callback(
+            Output("settings-layout", "opened", allow_duplicate=True),
+            Output("settings-layout", "children", allow_duplicate=True),
+            Input("update-tabs", "n_clicks"),
+            State("cardcanvas-tab-store", "data"),
+            prevent_initial_call=True,
+        )
+        def add_tabs(nclicks, tablist):
+            logging.debug("Callback add_tabs called")
+            tablist = tablist if tablist else ["Default"]
+            if not nclicks:
+                return no_update, no_update
+            children = [
+                dmc.Stack(
+                    [
+                        dmc.Title("Configure Tabs", order=2),
+                        dmc.Text(
+                            "These are the tabs you can configure in the dashboard."
+                            " Add, remove, or rename tabs and assign cards to different tabs.",
+                            variant="muted",
+                        ),
+                        dmc.TagsInput(
+                            id="tablist",
+                            label="Enter tab names",
+                            placeholder="Add text and press enter",
+                            value=tablist,
+                        ),
+                        dmc.Button(
+                            "OK",
+                            id="tabs-ok",
+                        )
+                    ]
+                )
+            ]
+            return True, children
+        
+        @app.callback(
+            Output("cardcanvas-tab-store", "data", allow_duplicate=True),
+            Output("settings-layout", "opened", allow_duplicate=True),
+            Output("cardcanvas-event-store", "data", allow_duplicate=True),
+            Input("tabs-ok", "n_clicks"),
+            State("tablist", "value"),
+            prevent_initial_call=True,
+        )
+        def save_tabs(nclicks, tablist):
+            logging.debug("Callback save_tabs called")
+            if not nclicks:
+                return no_update, no_update, no_update
+            if not tablist:
+                tablist = ["Default"]
+            event = {
+                "type": "re-render",
+                "data": None,
+            }
+            return tablist, False, event
 
         return app
