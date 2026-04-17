@@ -141,7 +141,7 @@ class Card(ABC):
                 ),
                 custom_spinner=dmc.Loader(type="oval", ml="md"),
                 parent_style={"height": "100%"},
-                overlay_style={"visibility":"visible", "filter": "blur(2px)"},
+                overlay_style={"visibility": "visible", "filter": "blur(2px)"},
             ),
             buttons,
         ]
@@ -179,6 +179,7 @@ class Card(ABC):
         """
         return dmc.Text("Settings not implemented yet.")
 
+
 class GlobalSettings(ABC):
     """Class to represent the global settings for the dashboard. This is an abstract class.
 
@@ -214,6 +215,7 @@ class GlobalSettings(ABC):
         """
         pass
 
+
 class CardManager:
     """Class to manage the cards on the dashboard."""
 
@@ -243,8 +245,16 @@ class CardManager:
         self,
         card_config: dict[str, dict[str, Any]],
         global_settings: dict[str, str] | None = None,
+        current_tab: str | None = None,
         debug=False,
     ) -> list[html.Div]:
+        if current_tab is None:
+            current_tab = "Default"
+        card_config = {
+            card_id: config
+            for card_id, config in (card_config or {}).items()
+            if config.get("tab", "Default") == current_tab
+        }
         cards = self.card_objects(card_config, global_settings)
         for card in cards.values():
             card.debug = debug

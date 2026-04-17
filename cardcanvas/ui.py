@@ -133,10 +133,11 @@ def main_buttons(global_settings: bool = False):
                 data=[],
                 size="md",
                 ml="auto",
+                persistence=True,
             ),
             icon_with_tooltip(
                 id="update-tabs",
-                icon="iconoir:multiple-pages-plus",
+                icon="fluent:tabs-16-filled",
                 title="Configure Tabs",
                 tooltip="Add/remove/rename tabs and assign cards to different tabs.",
                 **button_settings,

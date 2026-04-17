@@ -250,6 +250,7 @@ class CardCanvas:
                 new_children = self.card_manager.render(
                     card_config_store,
                     global_settings=global_settings,
+                    current_tab=current_tab,
                     debug=self.app.server.debug,
                 )
                 new_layout = card_layout_store
@@ -475,9 +476,10 @@ class CardCanvas:
             Input("card-grid", "droppedItem"),
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
+            State("tabs", "value"),
             prevent_initial_call=True,
         )
-        def add_new_card(dropped_item, card_config, card_layouts):
+        def add_new_card(dropped_item, card_config, card_layouts, current_tab):
             logging.debug("Callback add_new_card called")
             if not dropped_item:
                 return no_update, no_update, no_update
@@ -491,7 +493,7 @@ class CardCanvas:
             }
             # dropped_item["i"] returns the id of dropped object. In this case, it is the card class.
             card_class = dropped_item["i"]
-            card_config[card_id] = {"card_class": card_class, "settings": {}}
+            card_config[card_id] = {"card_class": card_class, "settings": {}, "tab": current_tab}
             card_class_obj = self.card_manager.card_classes.get(card_class)
             if (
                 card_class_obj
@@ -505,7 +507,7 @@ class CardCanvas:
                 card_layouts[key].append(new_layout_item)
             event = {
                 "type": "add-card",
-                "data": {"card_id": card_id, "card_class": card_class},
+                "data": {"card_id": card_id, "card_class": card_class, "tab": current_tab},
             }
             return card_config, card_layouts, event
 
@@ -517,9 +519,10 @@ class CardCanvas:
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
             State("card-grid", "col"),
+            State("tabs", "value"),
             prevent_initial_call=True,
         )
-        def add_new_card_action_icon(nclicks, card_config, card_layouts, col_count):
+        def add_new_card_action_icon(nclicks, card_config, card_layouts, col_count, current_tab):
             logging.debug("Callback add_new_card_action_icon called")
             if not nclicks or not any(nclicks) or not ctx.triggered:
                 return no_update, no_update, no_update
@@ -534,7 +537,7 @@ class CardCanvas:
                 "h": 1,
             }
             card_class = ctx.triggered_id["index"]
-            card_config[card_id] = {"card_class": card_class, "settings": {}}
+            card_config[card_id] = {"card_class": card_class, "settings": {}, "tab": current_tab}
             card_class_obj = self.card_manager.card_classes.get(card_class)
             if (
                 card_class_obj
@@ -548,7 +551,7 @@ class CardCanvas:
                 card_layouts[key].append(new_layout_item)
             event = {
                 "type": "add-card",
-                "data": {"card_id": card_id, "card_class": card_class},
+                "data": {"card_id": card_id, "card_class": card_class, "tab": current_tab},
             }
             return card_config, card_layouts, event
 
@@ -560,9 +563,10 @@ class CardCanvas:
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
             State("card-grid", "layout"),
+            State("tabs", "value"),
             prevent_initial_call=True,
         )
-        def duplicate_card(nclicks, card_config, card_layouts, card_layout):
+        def duplicate_card(nclicks, card_config, card_layouts, card_layout, current_tab):
             logging.debug("Callback duplicate_card called")
             if not card_config:
                 return no_update, no_update, no_update
@@ -577,13 +581,14 @@ class CardCanvas:
             )
             new_card = copy.deepcopy(card_config.get(card_id, None))
             new_card["id"] = new_card_id
+            new_card["tab"] = current_tab
             new_card_layout["i"] = new_card_id
             card_config[new_card_id] = new_card
             for key in card_layouts.keys():
                 card_layouts[key].append(new_card_layout)
             event = {
                 "type": "add-card",
-                "data": {"card_id": new_card_id},
+                "data": {"card_id": new_card_id, "tab": current_tab},
             }
             return card_config, card_layouts, event
 
@@ -895,6 +900,7 @@ class CardCanvas:
         )
         def save_tabs(nclicks, tablist):
             logging.debug("Callback save_tabs called")
+            print("Saving tabs:", tablist)
             if not nclicks:
                 return no_update, no_update, no_update
             if not tablist:
@@ -904,5 +910,18 @@ class CardCanvas:
                 "data": None,
             }
             return tablist, False, event
+        
+        @app.callback(
+            Output("cardcanvas-event-store", "data", allow_duplicate=True),
+            Input("tabs", "value"),
+            prevent_initial_call=True,
+        )
+        def change_tabs(current_tab):
+            logging.debug("Callback change_tabs called")
+            event = {
+                "type": "re-render",
+                "data": None,
+            }
+            return event
 
         return app
