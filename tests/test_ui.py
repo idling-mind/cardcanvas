@@ -1,7 +1,6 @@
 
 from cardcanvas import ui
 import dash_mantine_components as dmc
-from dash import dcc
 
 def test_button_with_tooltip():
     btn = ui.button_with_tooltip("btn-id", "mdi:home", "Home", "Go Home", variant="filled")

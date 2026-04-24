@@ -40,6 +40,19 @@ def test_render_container_structure():
     # Inside content div, there should be the result of render()
     assert content_div.children.children == "Simple Content"
 
+
+def test_render_container_has_share_action():
+    card = SimpleCard("test_id")
+    container = card.render_container()
+
+    menu_wrapper = container.children[1]
+    menu = menu_wrapper.children
+    menu_dropdown = menu.children[1]
+    menu_items = menu_dropdown.children
+    menu_item_ids = [item.id for item in menu_items]
+
+    assert {"type": "card-share", "index": "test_id"} in menu_item_ids
+
 def test_render_container_error_handling():
     card = ErrorCard("error_id")
     container = card.render_container()
