@@ -3,10 +3,12 @@ import copy
 import json
 import logging
 import random
+import urllib.parse
 from typing import Any
 from uuid import uuid4
 
 import dash_mantine_components as dmc
+from flask import request
 from dash import (
     ALL,
     MATCH,
@@ -27,6 +29,131 @@ from .card_manager import CardManager
 from .settings import DEFAULT_THEME
 
 dmc.add_figure_templates()
+
+SHARE_QUERY_KEY = "ccs"
+SHARE_PAYLOAD_VERSION = 1
+
+
+def _build_card_share_payload(
+    card_id: str,
+    card_config: dict[str, Any] | None,
+    card_layouts: dict[str, Any] | None,
+    global_settings: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    if not card_config or card_id not in card_config:
+        return None
+    selected_card = copy.deepcopy(card_config.get(card_id))
+    if not isinstance(selected_card, dict) or not selected_card.get("card_class"):
+        return None
+
+    selected_layouts: dict[str, list[dict[str, Any]]] = {}
+    for breakpoint, layout_items in (card_layouts or {}).items():
+        if not isinstance(layout_items, list):
+            continue
+        selected_items = []
+        for item in layout_items:
+            if isinstance(item, dict) and item.get("i") == card_id:
+                selected_items.append(copy.deepcopy(item))
+        if selected_items:
+            selected_layouts[breakpoint] = selected_items
+
+    if not selected_layouts:
+        selected_layouts = {"lg": []}
+
+    return {
+        "v": SHARE_PAYLOAD_VERSION,
+        "card_id": card_id,
+        "card": selected_card,
+        "layouts": selected_layouts,
+        "global_settings": copy.deepcopy(global_settings or {}),
+    }
+
+
+def _share_payload_to_search(payload: dict[str, Any]) -> str:
+    compact_payload = json.dumps(payload, separators=(",", ":"))
+    query = urllib.parse.urlencode({SHARE_QUERY_KEY: compact_payload})
+    return f"?{query}"
+
+
+def _search_to_share_payload(search: str | None) -> dict[str, Any] | None:
+    if not search:
+        return None
+    query = search[1:] if search.startswith("?") else search
+    parsed = urllib.parse.parse_qs(query)
+    values = parsed.get(SHARE_QUERY_KEY)
+    if not values:
+        return None
+    try:
+        payload = json.loads(values[-1])
+    except json.JSONDecodeError:
+        logging.error("Unable to parse share payload from query string")
+        return None
+    if not isinstance(payload, dict):
+        return None
+    return payload
+
+
+def _is_shared_search(search: str | None) -> bool:
+    return _share_payload_to_state(_search_to_share_payload(search)) is not None
+
+
+def _query_string_to_search(query_string: bytes | str | None) -> str | None:
+    if not query_string:
+        return None
+    if isinstance(query_string, bytes):
+        raw = query_string.decode("utf-8")
+    else:
+        raw = query_string
+    if not raw:
+        return None
+    return f"?{raw}"
+
+
+def _share_payload_to_state(payload: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not payload:
+        return None
+    if payload.get("v") != SHARE_PAYLOAD_VERSION:
+        return None
+
+    card_id = payload.get("card_id")
+    card = payload.get("card")
+    if not isinstance(card_id, str) or not isinstance(card, dict):
+        return None
+    if not card.get("card_class"):
+        return None
+
+    settings = card.get("settings", {})
+    if not isinstance(settings, dict):
+        settings = {}
+
+    raw_layouts = payload.get("layouts", {})
+    layouts: dict[str, list[dict[str, Any]]] = {}
+    if isinstance(raw_layouts, dict):
+        for breakpoint, layout_items in raw_layouts.items():
+            if not isinstance(layout_items, list):
+                continue
+            filtered_items = []
+            for item in layout_items:
+                if isinstance(item, dict) and item.get("i") == card_id:
+                    filtered_items.append(item)
+            layouts[breakpoint] = filtered_items
+    if not layouts:
+        layouts = {"lg": []}
+
+    global_settings = payload.get("global_settings", {})
+    if not isinstance(global_settings, dict):
+        global_settings = {}
+
+    return {
+        "card_config": {
+            card_id: {
+                "card_class": card["card_class"],
+                "settings": settings,
+            }
+        },
+        "card_layouts": layouts,
+        "global_settings": global_settings,
+    }
 
 
 class CardCanvas:
@@ -67,6 +194,13 @@ class CardCanvas:
         )
         app.title = f"{title}: {subtitle}" if subtitle else title
 
+        def is_request_shared_mode() -> bool:
+            try:
+                return _is_shared_search(_query_string_to_search(request.query_string))
+            except RuntimeError:
+                # No request context during startup/background operations.
+                return False
+
         title_layout = dmc.Group(
             [
                 title_component
@@ -103,111 +237,157 @@ class CardCanvas:
             ),
         )
 
-        stage_children = [
-            loading_indicator,
-            title_layout,
-            main_buttons,
-            ResponsiveGrid(
-                id="card-grid",
-                children=[],
-                cols=settings.get(
-                    "grid_cols",
-                    {"xl": 24, "lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
-                ),
-                breakpoints=settings.get(
-                    "grid_breakpoints",
-                    {
-                        "xl": 1920,
-                        "lg": 1200,
-                        "md": 1080,
-                        "sm": 768,
-                        "xs": 576,
-                        "xxs": 480,
-                    },
-                ),
-                rowHeight=settings.get("grid_row_height", 50),
-                compactType=settings.get("grid_compact_type", None),
-                draggableCancel=".no-drag *",
-                isDroppable=True,
-                layouts={"lg": []},
-                width=100,
-            ),
-        ]
-        if footer_component:
-            stage_children.append(footer_component)
+        def serve_layout():
+            initial_shared_mode = is_request_shared_mode()
+            hidden_style = {"display": "none"} if initial_shared_mode else {}
 
-        stage_layout = dmc.Container(
-            fluid=True,
-            children=stage_children,
-            style={
-                "backgroundColor": background_color,
-                "minHeight": "100vh",
-            },
-        )
-
-        invisible_controls = html.Div(
-            children=[
-                dcc.Store(id="cardcanvas-main-store", storage_type="local"),
-                dcc.Store(
-                    id="cardcanvas-config-store",
-                    storage_type="memory",
+            stage_children = [
+                loading_indicator,
+                html.Div(
+                    title_layout,
+                    id="cardcanvas-title-wrapper",
+                    style=hidden_style,
                 ),
-                dcc.Store(
-                    id="cardcanvas-layout-store",
-                    storage_type="memory",
+                html.Div(
+                    main_buttons,
+                    id="cardcanvas-toolbar-wrapper",
+                    style=hidden_style,
                 ),
-                dcc.Store(
-                    id="cardcanvas-global-store",
-                    storage_type="memory",
+                ResponsiveGrid(
+                    id="card-grid",
+                    children=[],
+                    cols=settings.get(
+                        "grid_cols",
+                        {"xl": 24, "lg": 18, "md": 12, "sm": 6, "xs": 4, "xxs": 2},
+                    ),
+                    breakpoints=settings.get(
+                        "grid_breakpoints",
+                        {
+                            "xl": 1920,
+                            "lg": 1200,
+                            "md": 1080,
+                            "sm": 768,
+                            "xs": 576,
+                            "xxs": 480,
+                        },
+                    ),
+                    rowHeight=settings.get("grid_row_height", 50),
+                    compactType=settings.get("grid_compact_type", None),
+                    draggableCancel=".no-drag *",
+                    isDroppable=True,
+                    layouts={"lg": []},
+                    width=100,
                 ),
-                dcc.Store(
-                    id="cardcanvas-event-store",
-                    storage_type="memory",
+                html.Div(
+                    footer_component,
+                    id="cardcanvas-footer-wrapper",
+                    style=hidden_style,
                 ),
-                dcc.Download(id="download-layout-data"),
-                dmc.NotificationContainer(id="notification-container"),
-            ],
-        )
+            ]
 
-        settings_layout = dmc.Drawer(
-            id="settings-layout",
-            padding="md",
-            closeOnClickOutside=False,
-            withOverlay=False,
-            position="right",
-            lockScroll=False,
-        )
+            stage_layout = dmc.Container(
+                id="cardcanvas-stage",
+                fluid=True,
+                children=stage_children,
+                style={
+                    "backgroundColor": background_color,
+                    "minHeight": "100vh",
+                    "display": "none",
+                },
+            )
 
-        main_components = [stage_layout, settings_layout, invisible_controls]
+            invisible_controls = html.Div(
+                children=[
+                    dcc.Location(id="cardcanvas-url", refresh=False),
+                    dcc.Store(id="cardcanvas-main-store", storage_type="local"),
+                    dcc.Store(
+                        id="cardcanvas-config-store",
+                        storage_type="memory",
+                    ),
+                    dcc.Store(
+                        id="cardcanvas-layout-store",
+                        storage_type="memory",
+                    ),
+                    dcc.Store(
+                        id="cardcanvas-global-store",
+                        storage_type="memory",
+                    ),
+                    dcc.Store(
+                        id="cardcanvas-event-store",
+                        storage_type="memory",
+                    ),
+                    dcc.Download(id="download-layout-data"),
+                    dmc.NotificationContainer(id="notification-container"),
+                ],
+            )
 
-        app.layout = dmc.MantineProvider(
-            children=main_components,
-            theme=theme,
-            id="mantine-provider",
-            forceColorScheme="light",
-        )
+            settings_layout = dmc.Drawer(
+                id="settings-layout",
+                padding="md",
+                closeOnClickOutside=False,
+                withOverlay=False,
+                position="right",
+                lockScroll=False,
+            )
+
+            main_components = [stage_layout, settings_layout, invisible_controls]
+
+            return dmc.MantineProvider(
+                children=main_components,
+                theme=theme,
+                id="mantine-provider",
+                forceColorScheme="light",
+            )
+
+        app.layout = serve_layout
 
         @app.callback(
             Output("cardcanvas-config-store", "data"),
             Output("cardcanvas-layout-store", "data"),
             Output("cardcanvas-global-store", "data"),
             Output("cardcanvas-event-store", "data"),
-            Input(app.layout, "layout"),
+            Input("cardcanvas-url", "pathname"),
+            Input("cardcanvas-url", "search"),
             State("cardcanvas-main-store", "data"),
         )
-        def load_layout(layout, main_store):
+        def load_layout(pathname, search, main_store):
             logging.debug("Callback load_layout called")
             if not main_store:
                 main_store = {}
 
-            card_config = main_store.get("card_config", start_card_config)
-            card_layouts = main_store.get("card_layouts", start_card_layout)
-            global_settings = main_store.get("global_settings", {})
+            shared_state = _share_payload_to_state(_search_to_share_payload(search))
+            if shared_state:
+                card_config = shared_state["card_config"]
+                card_layouts = shared_state["card_layouts"]
+                global_settings = shared_state["global_settings"]
+            else:
+                card_config = main_store.get("card_config", start_card_config)
+                card_layouts = main_store.get("card_layouts", start_card_layout)
+                global_settings = main_store.get("global_settings", start_global_settings)
             event = {
                 "type": "re-render",
                 "data": None,
             }
             return card_config, card_layouts, global_settings, event
+
+        @app.callback(
+            Output("cardcanvas-stage", "style"),
+            Output("cardcanvas-title-wrapper", "style"),
+            Output("cardcanvas-toolbar-wrapper", "style"),
+            Output("cardcanvas-footer-wrapper", "style"),
+            Input("cardcanvas-url", "search"),
+        )
+        def toggle_shared_mode_ui(search):
+            stage_style = {
+                "backgroundColor": background_color,
+                "minHeight": "100vh",
+                "display": "block",
+            }
+            if _is_shared_search(search):
+                hidden_style = {"display": "none"}
+                return stage_style, hidden_style, hidden_style, hidden_style
+            visible_style: dict[str, Any] = {}
+            return stage_style, visible_style, visible_style, visible_style
 
         @app.callback(
             Output("card-grid", "children"),
@@ -603,6 +783,51 @@ class CardCanvas:
                 "data": {"card_id": card_id},
             }
             return card_config, card_layouts, event
+
+        @app.callback(
+            Output("cardcanvas-url", "search", allow_duplicate=True),
+            Output("notification-container", "sendNotifications", allow_duplicate=True),
+            Input({"type": "card-share", "index": ALL}, "n_clicks"),
+            State("cardcanvas-config-store", "data"),
+            State("cardcanvas-layout-store", "data"),
+            State("cardcanvas-global-store", "data"),
+            prevent_initial_call=True,
+        )
+        def share_card_link(nclicks, card_config, card_layouts, global_settings):
+            logging.debug("Callback share_card_link called")
+            if not any(nclicks) or not ctx.triggered or not ctx.triggered_id:
+                return no_update, no_update
+            if not isinstance(ctx.triggered_id, dict):
+                return no_update, no_update
+
+            card_id = ctx.triggered_id.get("index")
+            payload = _build_card_share_payload(
+                card_id=card_id,
+                card_config=card_config,
+                card_layouts=card_layouts,
+                global_settings=global_settings,
+            )
+            if not payload:
+                return no_update, [
+                    dict(
+                        title="Share Link Failed",
+                        message="Unable to build a shareable link for this card.",
+                        color="red",
+                        action="show",
+                    )
+                ]
+            search = _share_payload_to_search(payload)
+            return search, [
+                dict(
+                    title="Share Link Ready",
+                    message=(
+                        "The URL now contains the shared card payload. "
+                        "Copy the address bar link to share this card."
+                    ),
+                    color="teal",
+                    action="show",
+                )
+            ]
 
         @app.callback(
             Output("settings-layout", "children", allow_duplicate=True),

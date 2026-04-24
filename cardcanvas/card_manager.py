@@ -95,6 +95,12 @@ class Card(ABC):
                                 leftSection=DashIconify(icon="mdi:content-copy"),
                             ),
                             dmc.MenuItem(
+                                "Share Link",
+                                id={"type": "card-share", "index": self.id},
+                                className="no-drag",
+                                leftSection=DashIconify(icon="mdi:share-variant-outline"),
+                            ),
+                            dmc.MenuItem(
                                 "Delete",
                                 id={"type": "card-delete", "index": self.id},
                                 className="no-drag",

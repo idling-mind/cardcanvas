@@ -133,3 +133,16 @@ The following are the class attributes:
 Have a look at `usage.py` or the folder `examples` to see more examples.
 
 The animation shown above can be found in examples/charts.py
+
+## Share a single card by URL
+
+Each card menu now has a `Share Link` action. Clicking it updates the browser URL
+with a query payload that includes:
+
+- the selected card class and card settings,
+- the selected card layout entries across breakpoints,
+- the current global settings.
+
+Opening that URL in another browser/session loads CardCanvas in shared mode and
+renders only that card with the captured settings and layout. In shared mode,
+the header, toolbar and footer are hidden so the canvas shows only the card.
