@@ -223,9 +223,6 @@ class CardCanvas:
             children=[ui.main_buttons(global_settings=show_global_settings)],
             opened=True,
             style={
-                "position": "sticky",
-                "top": 0,
-                "zIndex": 10,
                 "backgroundColor": background_color,
             },
         )
@@ -240,6 +237,13 @@ class CardCanvas:
         def serve_layout():
             initial_shared_mode = is_request_shared_mode()
             hidden_style = {"display": "none"} if initial_shared_mode else {}
+            toolbar_wrapper_style = {
+                "position": "sticky",
+                "top": 0,
+                "zIndex": 10,
+                "backgroundColor": background_color,
+                **hidden_style,
+            }
 
             stage_children = [
                 loading_indicator,
@@ -251,7 +255,7 @@ class CardCanvas:
                 html.Div(
                     main_buttons,
                     id="cardcanvas-toolbar-wrapper",
-                    style=hidden_style,
+                    style=toolbar_wrapper_style,
                 ),
                 ResponsiveGrid(
                     id="card-grid",
@@ -292,7 +296,7 @@ class CardCanvas:
                 style={
                     "backgroundColor": background_color,
                     "minHeight": "100vh",
-                    "display": "none",
+                    "visibility": "hidden",
                 },
             )
 
@@ -381,13 +385,23 @@ class CardCanvas:
             stage_style = {
                 "backgroundColor": background_color,
                 "minHeight": "100vh",
-                "display": "block",
+                "visibility": "visible",
+            }
+            toolbar_visible_style = {
+                "position": "sticky",
+                "top": 0,
+                "zIndex": 10,
+                "backgroundColor": background_color,
             }
             if _is_shared_search(search):
                 hidden_style = {"display": "none"}
-                return stage_style, hidden_style, hidden_style, hidden_style
+                toolbar_hidden_style = {
+                    **toolbar_visible_style,
+                    **hidden_style,
+                }
+                return stage_style, hidden_style, toolbar_hidden_style, hidden_style
             visible_style: dict[str, Any] = {}
-            return stage_style, visible_style, visible_style, visible_style
+            return stage_style, visible_style, toolbar_visible_style, visible_style
 
         @app.callback(
             Output("card-grid", "children"),
