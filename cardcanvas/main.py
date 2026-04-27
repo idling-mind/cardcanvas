@@ -804,10 +804,17 @@ class CardCanvas:
             Input({"type": "card-share", "index": ALL}, "n_clicks"),
             State("cardcanvas-config-store", "data"),
             State("cardcanvas-layout-store", "data"),
+            State("card-grid", "layouts"),
             State("cardcanvas-global-store", "data"),
             prevent_initial_call=True,
         )
-        def share_card_link(nclicks, card_config, card_layouts, global_settings):
+        def share_card_link(
+            nclicks,
+            card_config,
+            card_layouts,
+            current_grid_layouts,
+            global_settings,
+        ):
             logging.debug("Callback share_card_link called")
             if not any(nclicks) or not ctx.triggered or not ctx.triggered_id:
                 return no_update, no_update
@@ -815,10 +822,11 @@ class CardCanvas:
                 return no_update, no_update
 
             card_id = ctx.triggered_id.get("index")
+            effective_layouts = current_grid_layouts or card_layouts
             payload = _build_card_share_payload(
                 card_id=card_id,
                 card_config=card_config,
-                card_layouts=card_layouts,
+                card_layouts=effective_layouts,
                 global_settings=global_settings,
             )
             if not payload:
